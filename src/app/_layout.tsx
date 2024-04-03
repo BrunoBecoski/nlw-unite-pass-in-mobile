@@ -1,5 +1,4 @@
 import { Slot } from 'expo-router'
-import { StatusBar } from 'expo-status-bar'
 import {
   useFonts,
   Roboto_400Regular,
@@ -18,10 +17,9 @@ export default function Layout() {
     Roboto_700Bold,
   })
 
-  return (
-    <>
-      <StatusBar style="light" />
-      {fontsLoaded ? <Slot /> :<Loading />}
-    </>
-  )
+  if (!fontsLoaded) {
+    return <Loading />
+  }
+
+  return <Slot /> 
 }
