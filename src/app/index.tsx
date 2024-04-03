@@ -1,27 +1,9 @@
-import { StatusBar, StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 export default function Home() {
   return (
-    <View style={styles.container}>
-      <StatusBar
-        backgroundColor="#00292E"
-        barStyle="light-content"
-      />
-      <Text style={styles.title}>Hello NLW Unite</Text>
+    <View className="bg-green-500 flex-1 items-center justify-center">
+      <Text className="text-orange-500 text-5xl font-bold">Hello NLW Unite</Text>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#00292E',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    color: '#F48F56', 
-    fontSize: 48,
-    fontWeight: 'bold',
-  }
-})
