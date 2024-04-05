@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ScrollView, StatusBar, Text, View, TouchableOpacity, Alert } from 'react-native'
+import { ScrollView, StatusBar, Text, View, TouchableOpacity, Alert, Modal } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -7,9 +7,11 @@ import { Header } from '@/components/header'
 import { Credential } from '@/components/credential'
 import { colors } from '@/styles/colors'
 import { Button } from '@/components/button'
+import { QRCode } from '@/components/qrcode'
 
 export default function Ticket() {
   const [image, setImage] = useState('')
+  const [expandQRCode, setExpandQRCode] = useState(false)
 
   async function handleSelectImage() {
     try {
@@ -43,6 +45,7 @@ export default function Ticket() {
        <Credential 
         image={image}
         onChangeAvatar={handleSelectImage}
+        onExpandQRCode={() =>  setExpandQRCode(true)}
        />
 
         <View className="self-center my-6">
@@ -73,6 +76,18 @@ export default function Ticket() {
           </View>
         </TouchableOpacity>
       </ScrollView>
+
+      <Modal visible={expandQRCode} statusBarTranslucent>
+        <View className="flex-1 bg-green-500 items-center justify-center">
+          <QRCode value='test' size={300} />
+
+          <TouchableOpacity activeOpacity={0.7} onPress={() => setExpandQRCode(false)}>
+            <Text className="font-body text-orange-500 text-sm text-center mt-10">
+              Fechar
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   )
 }
