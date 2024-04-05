@@ -12,7 +12,7 @@ export function Button({ title, isLoading = false, ...props }: ButtonProps) {
       activeOpacity={0.7}
       {...props}
     >
-      <View  className="w-full h-14 bg-orange-500 items-center justify-center rounded-lg">
+      <View className="w-full h-14 bg-orange-500 items-center justify-center rounded-lg">
         {isLoading 
           ?
             <ActivityIndicator
