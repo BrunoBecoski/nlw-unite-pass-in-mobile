@@ -5,6 +5,7 @@ import { Link, router } from 'expo-router'
 import { FontAwesome6, MaterialIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
+import { useBadgeStore } from '@/store/badge-store'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { colors } from '@/styles/colors'
@@ -15,6 +16,8 @@ export default function Register() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  const badgeStore = useBadgeStore()
 
   async function handleRegister() {
     try {
@@ -30,6 +33,11 @@ export default function Register() {
       })
 
       if (registerResponse.data.attendeeId) {
+        const badgeResponse = await api
+          .get(`/attendees/${registerResponse.data.attendeeId}/badge`)
+
+          badgeStore.save(badgeResponse.data.badge)
+
         Alert.alert('Inscrição', 'Inscrição realizado com sucesso!',[
           {
             text: 'OK',
@@ -37,8 +45,10 @@ export default function Register() {
           }
         ])
       }
+
     } catch (error) {
       console.log(error)
+      setIsLoading(false)
 
       if (axios.isAxiosError(error)) {
         if (String(error.response?.data.message).includes('already registered')) {
@@ -47,9 +57,7 @@ export default function Register() {
       }
 
       Alert.alert('Inscrição', 'Não foi possível fazer a inscrição!')
-    } finally {
-      setIsLoading(false)
-    }
+    } 
   }
 
   return (

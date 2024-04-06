@@ -1,16 +1,17 @@
 import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
+import { BadgeStoreProps } from '@/store/badge-store'
 import { QRCode } from '@/components/qrcode'
 import { colors } from '@/styles/colors'
 
 interface CredentialProps {
-  image?: string
+  data: BadgeStoreProps
   onChangeAvatar?: () => void
   onExpandQRCode?: () => void
 }
 
-export function Credential({ image, onChangeAvatar, onExpandQRCode }: CredentialProps) {
+export function Credential({ data, onChangeAvatar, onExpandQRCode }: CredentialProps) {
   return (
     <View className="w-full self-stretch items-center">
       <Image 
@@ -24,20 +25,20 @@ export function Credential({ image, onChangeAvatar, onExpandQRCode }: Credential
           source={require('@/assets/ticket/header.png')}
         >
           <View className="w-full flex-row items-center justify-between">
-            <Text className="text-zinc-50 text-sm font-bold">Unite summit</Text>
-            <Text className="text-zinc-50 text-sm font-bold">#123</Text>
+            <Text className="text-zinc-50 text-sm font-bold">{data.eventTitle}</Text>
+            <Text className="text-zinc-50 text-sm font-bold">#{data.id}</Text>
           </View>
 
           <View className="w-40 h-40 bg-black rounded-full" />
         </ImageBackground>
 
-        {image 
+        {data.image 
           ?
             <TouchableOpacity onPress={onChangeAvatar} activeOpacity={0.9}>
               <View>
                 <Image
                   className="w-36 h-36 rounded-full -mt-24"
-                  source={{ uri: image}}
+                  source={{ uri: data.image}}
                   />
                 </View>
             </TouchableOpacity>
@@ -50,15 +51,15 @@ export function Credential({ image, onChangeAvatar, onExpandQRCode }: Credential
         }
 
         <Text className="font-bold text-2xl text-zinc-50 mt-4">
-          Bruno Becoski
+          {data.name}
         </Text>
 
         <Text className="font-regular text-base text-zinc-300 mb-4">
-          bruno@email.com
+          {data.email}
         </Text>
 
         <QRCode
-          value='teste'
+          value={data.checkInUrl}
           size={120}
         />
 

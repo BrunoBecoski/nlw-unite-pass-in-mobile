@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { ScrollView, StatusBar, Text, View, TouchableOpacity, Alert, Modal } from 'react-native'
+import { Redirect } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker'
 import { FontAwesome } from '@expo/vector-icons'
 
+import { useBadgeStore } from '@/store/badge-store'
 import { Header } from '@/components/header'
 import { Credential } from '@/components/credential'
 import { colors } from '@/styles/colors'
@@ -10,8 +12,9 @@ import { Button } from '@/components/button'
 import { QRCode } from '@/components/qrcode'
 
 export default function Ticket() {
-  const [image, setImage] = useState('')
   const [expandQRCode, setExpandQRCode] = useState(false)
+
+  const badgeStore = useBadgeStore()
 
   async function handleSelectImage() {
     try {
@@ -22,13 +25,16 @@ export default function Ticket() {
       })
 
       if (result.assets) {
-        setImage(result.assets[0].uri)
+        badgeStore.updateAvatar(result.assets[0].uri)
       }
-      
     } catch (error) {
       console.log(error)
       Alert.alert('Foto', 'Não foi possível selecionar a imagem.')
     }
+  }
+
+  if (!badgeStore.data?.checkInUrl) {
+    return <Redirect href="/" />
   }
 
   return (
@@ -42,11 +48,11 @@ export default function Ticket() {
         contentContainerClassName="px-8 pb-8"
         showsVerticalScrollIndicator={false}
       >
-       <Credential 
-        image={image}
-        onChangeAvatar={handleSelectImage}
-        onExpandQRCode={() =>  setExpandQRCode(true)}
-       />
+        <Credential
+          data={badgeStore.data}
+          onChangeAvatar={handleSelectImage}
+          onExpandQRCode={() =>  setExpandQRCode(true)}
+        />
 
         <View className="self-center my-6">
           <FontAwesome
@@ -61,13 +67,14 @@ export default function Ticket() {
         </Text>
 
         <Text className="text-white font-regular text-base mt-1 mb-6">
-          Mostre ao mundo que você vai participar do Unite Summit!
+          Mostre ao mundo que você vai participar do evento {badgeStore.data.eventTitle}!
         </Text>
 
         <Button title="Compartilhar" />
 
         <TouchableOpacity 
           activeOpacity={0.7}
+          onPress={() => badgeStore.remove()}
         >
           <View className="mt-10">
             <Text className="text-base text-white font-bold text-center">
