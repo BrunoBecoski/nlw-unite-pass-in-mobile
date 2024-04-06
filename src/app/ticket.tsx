@@ -3,6 +3,7 @@ import { ScrollView, StatusBar, Text, View, TouchableOpacity, Alert, Modal, Shar
 import { Redirect } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker'
 import { FontAwesome } from '@expo/vector-icons'
+import { MotiView } from 'moti'
 
 import { useBadgeStore } from '@/store/badge-store'
 import { Header } from '@/components/header'
@@ -69,13 +70,26 @@ export default function Ticket() {
           onExpandQRCode={() =>  setExpandQRCode(true)}
         />
 
-        <View className="self-center my-6">
+        <MotiView
+          className="self-center my-6"
+          from={{
+            translateY: 0,
+          }}
+          animate={{
+            translateY: 10,
+          }}
+          transition={{
+            loop: true,
+            type: 'timing',
+            duration: 700,
+          }}
+        >
           <FontAwesome
             name="angle-double-down"
             size={24}
             color={colors.gray[300]}
           />
-        </View>
+        </MotiView>
 
         <Text className="text-white font-bold text-2xl mt-4">
           Compartilhar credencial
