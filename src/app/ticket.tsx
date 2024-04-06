@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ScrollView, StatusBar, Text, View, TouchableOpacity, Alert, Modal } from 'react-native'
+import { ScrollView, StatusBar, Text, View, TouchableOpacity, Alert, Modal, Share } from 'react-native'
 import { Redirect } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker'
 import { FontAwesome } from '@expo/vector-icons'
@@ -15,6 +15,21 @@ export default function Ticket() {
   const [expandQRCode, setExpandQRCode] = useState(false)
 
   const badgeStore = useBadgeStore()
+
+  async function handleShare() {
+    try {
+      if (badgeStore.data?.checkInUrl) {
+        await Share.share({
+          message: badgeStore.data.checkInUrl,
+        })
+      }
+      
+    } catch (error) {
+      console.log(error)
+
+      Alert.alert('Compartilhar', 'Não foi possível compartilhar!') 
+    }
+  }
 
   async function handleSelectImage() {
     try {
@@ -70,7 +85,10 @@ export default function Ticket() {
           Mostre ao mundo que você vai participar do evento {badgeStore.data.eventTitle}!
         </Text>
 
-        <Button title="Compartilhar" />
+        <Button 
+          title="Compartilhar"
+          onPress={handleShare}
+        />
 
         <TouchableOpacity 
           activeOpacity={0.7}
