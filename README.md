@@ -1,1 +1,1 @@
-# .pass.in
+# pass.in
