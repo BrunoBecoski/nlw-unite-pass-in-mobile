@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Alert, Image, StatusBar, View } from 'react-native'
-import { Link, Redirect } from 'expo-router'
+import { Link, Redirect, router } from 'expo-router'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
@@ -23,21 +23,25 @@ export default function Home() {
 
       setIsLoading(true)
 
-      const { data } = await api.get(`/attendees/${code}/badge`)
+      const { data } = await api.get(`/get/attendee/${code}`)
+      console.log('data')
 
-      badgeStore.save(data.badge)
+      console.log(data)
+
+      router.replace('/attendee')
+      // badgeStore.save(data.badge)
     } catch (error) {
       console.log(error)
 
       setIsLoading(false)
 
-      Alert.alert('Ingresso', 'Ingresso não encontrado!')
+      Alert.alert('Participante', 'Participante não encontrado!')
     }
   }
 
-  if (badgeStore.data?.checkInUrl) {
-    return <Redirect href="/ticket" />
-  }
+  // if (badgeStore.data?.checkInUrl) {
+  //   return <Redirect href="/ticket" />
+  // }
 
   return (
     <View className="bg-green-500 flex-1 items-center justify-center p-8">
@@ -57,7 +61,7 @@ export default function Home() {
             color={colors.green[200]}
           />
           <Input.Field 
-            placeholder="Código do ingresso"
+            placeholder="Seu código de participante"
             onChangeText={setCode}
             value={code}
           />
@@ -65,12 +69,12 @@ export default function Home() {
 
         <Button 
           onPress={handleAccessCredential} 
-          title="Acessar credencial"
+          title="Acessar conta"
           isLoading={isLoading}
         />
 
         <Link href="/register" className="text-gray-100 text-base font-bold text-center mt-8">
-          Ainda não possui ingresso?
+          Ainda não possui conta?
         </Link>
       </View>
     </View>
