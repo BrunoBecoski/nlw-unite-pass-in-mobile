@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
 import { useBadgeStore } from '@/store/badge-store'
+import { useAttendeeStore } from '@/store/attendee-store'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { colors } from '@/styles/colors'
@@ -14,6 +15,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
 
   const badgeStore = useBadgeStore();
+  const attendeeStore = useAttendeeStore();
 
   async function handleAccessCredential() {
     try {
@@ -24,11 +26,8 @@ export default function Home() {
       setIsLoading(true)
 
       const { data } = await api.get(`/get/attendee/${code}`)
-      console.log('data')
 
-      console.log(data)
-
-      router.replace('/attendee')
+      attendeeStore.save(data.attendee)
       // badgeStore.save(data.badge)
     } catch (error) {
       console.log(error)
@@ -42,6 +41,10 @@ export default function Home() {
   // if (badgeStore.data?.checkInUrl) {
   //   return <Redirect href="/ticket" />
   // }
+
+  if (attendeeStore.data) {
+    return <Redirect href="/attendee" />
+  }
 
   return (
     <View className="bg-green-500 flex-1 items-center justify-center p-8">
