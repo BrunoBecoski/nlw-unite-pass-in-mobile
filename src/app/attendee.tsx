@@ -3,6 +3,7 @@ import { FlatList, StatusBar, Text, View } from 'react-native'
 
 import { useAttendeeStore } from '@/store/attendee-store'
 import { Button } from '@/components/button'
+import { Event } from '@/components/event';
 
 export default function Attendee() {
   const attendeeStore = useAttendeeStore();
@@ -38,14 +39,7 @@ export default function Attendee() {
           data={events}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View> 
-              <Text className="text-zinc-50">{item.slug}</Text>
-              <Text className="text-zinc-50">{item.title}</Text>
-              <Text className="text-zinc-50">{item.details}</Text>
-              <Text className="text-zinc-50">{item.startDate.toString()}</Text>
-              <Text className="text-zinc-50">{item.endDate.toString()}</Text>
-              <Text className="text-zinc-50">{item.checkIn}</Text>
-            </View>
+            <Event event={item} />
           )}
         />
       <Button onPress={attendeeStore.remove} title="Sair" />
