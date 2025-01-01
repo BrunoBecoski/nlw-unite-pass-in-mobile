@@ -67,8 +67,8 @@ export function Credential({ data, onChangeAvatar, onExpandQRCode }: CredentialP
                 <Image
                   className="w-36 h-36 rounded-full -mt-24"
                   source={{ uri: data.image}}
-                  />
-                </View>
+                />
+              </View>
             </TouchableOpacity>
           :
             <TouchableOpacity onPress={onChangeAvatar} activeOpacity={0.9}>
