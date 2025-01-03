@@ -37,7 +37,7 @@ export default function Attendee() {
 
     <Header title="Minha conta" handleExit={handleExit} />
       <View className="items-center py-4">
-        <Text className="text-zinc-50 text-sm font-bold mb-4">#{code}</Text>
+        <Text className="text-zinc-50 text-lg font-bold mb-4">Código #{code}</Text>
 
         <Image
           className="w-36 h-36 rounded-full"

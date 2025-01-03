@@ -20,7 +20,12 @@ export function Header({ title, handleExit }: HeaderProps) {
       
       { handleExit &&
         <TouchableOpacity onPress={handleExit}>
-          <MaterialCommunityIcons name="logout" size={24} color={colors.orange[500]} />
+          <MaterialCommunityIcons
+            className="h-12"
+            name="logout"
+            size={24}
+            color={colors.orange[500]}
+          />
         </TouchableOpacity>
       }
     </View>

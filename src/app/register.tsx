@@ -5,7 +5,7 @@ import { Link, router } from 'expo-router'
 import { FontAwesome6, MaterialIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
-import { useBadgeStore } from '@/store/badge-store'
+import { useAttendeeStore } from '@/store/attendee-store'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { colors } from '@/styles/colors'
@@ -17,7 +17,7 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const badgeStore = useBadgeStore()
+  const attendeeStore = useAttendeeStore()
 
   async function handleRegister() {
     try {
@@ -27,36 +27,31 @@ export default function Register() {
       
       setIsLoading(true)
   
-      const registerResponse = await api.post(`/events/${EVENT_ID}/attendees`, {
+      const { data } = await api.post('/create/attendee', {
         name,
         email,
       })
 
-      if (registerResponse.data.attendeeId) {
-        const badgeResponse = await api
-          .get(`/attendees/${registerResponse.data.attendeeId}/badge`)
+      attendeeStore.save(data.attendee)
 
-          badgeStore.save(badgeResponse.data.badge)
 
-        Alert.alert('Inscrição', 'Inscrição realizado com sucesso!',[
-          {
-            text: 'OK',
-            onPress: () => router.push('/ticket')
-          }
-        ])
-      }
+      Alert.alert('Criação', 'Contra crida com sucesso!',[
+        {
+          text: 'OK',
+          onPress: () => router.push('/attendee')
+        }
+      ])
 
     } catch (error) {
-      console.log(error)
       setIsLoading(false)
 
       if (axios.isAxiosError(error)) {
-        if (String(error.response?.data.message).includes('already registered')) {
-          return Alert.alert('Inscrição', 'Este-email já está cadastrado!')
+        if (String(error.response?.data.message).includes('Email está sendo utilizado.')) {
+          return Alert.alert('Criação', 'Email está sendo utilizado.')
         }
       }
 
-      Alert.alert('Inscrição', 'Não foi possível fazer a inscrição!')
+      Alert.alert('Criação', 'Não foi possível fazer a inscrição!')
     } 
   }
 
@@ -95,12 +90,12 @@ export default function Register() {
 
         <Button 
           onPress={handleRegister}
-          title="Realizar inscrição"
+          title="Criar conta"
           isLoading={isLoading}
         />
 
         <Link href="/" className="text-gray-100 text-base font-bold text-center mt-8">
-          Já possui ingresso?
+          Já tem conta?
         </Link>
       </View>
     </View>
