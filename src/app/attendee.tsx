@@ -1,9 +1,10 @@
-import { Redirect } from 'expo-router'
+import { Redirect, router } from 'expo-router'
 import { Alert, FlatList, Image, StatusBar, Text, View } from 'react-native'
 
 import { useAttendeeStore } from '@/store/attendee-store'
 import { Header } from '@/components/header';
 import { Event } from '@/components/event';
+import { Button } from '@/components/button';
 
 export default function Attendee() {
   const attendeeStore = useAttendeeStore();
@@ -11,6 +12,7 @@ export default function Attendee() {
   if (attendeeStore.data == null) {
     return <Redirect href="/" />
   }
+
   const {
     code,
     name,
@@ -62,6 +64,8 @@ export default function Attendee() {
           <Event event={item} />
         )}
       />
+
+      <Button title="Ver eventos" onPress={() => router.navigate('/events')} />
     </View>
   )
 }
