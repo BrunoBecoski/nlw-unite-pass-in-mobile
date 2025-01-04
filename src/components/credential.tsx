@@ -1,5 +1,5 @@
 import { Image, ImageBackground, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native'
-import { Feather } from '@expo/vector-icons'
+// import { Feather } from '@expo/vector-icons'
 import { MotiView } from 'moti'
 
 import { BadgeStoreProps } from '@/store/badge-store'

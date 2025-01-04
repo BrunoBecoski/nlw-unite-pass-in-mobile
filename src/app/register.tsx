@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Alert, Image, StatusBar, View } from 'react-native'
 import axios from 'axios'
 import { Link, router } from 'expo-router'
-import { FontAwesome6, MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
@@ -67,12 +67,16 @@ export default function Register() {
 
       <View className="w-full mt-12 gap-3">
         <Input>
-          <FontAwesome6
-            name="user-circle"
+          <MaterialIcons
+            name="account-circle"
             size={20}
             color={colors.green[200]}
           />
-          <Input.Field onChangeText={setName} placeholder="Nome completo" />
+
+          <Input.Field 
+            onChangeText={setName}
+            placeholder="Nome completo"
+          />
         </Input>
  
         <Input>
@@ -81,6 +85,7 @@ export default function Register() {
             size={20}
             color={colors.green[200]}
           />
+          
           <Input.Field
             onChangeText={setEmail} 
             placeholder="E-mail"

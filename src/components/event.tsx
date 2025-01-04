@@ -1,8 +1,8 @@
-import { Text, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import dayjs from "dayjs"
+import { Text, View } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
+import dayjs from 'dayjs'
 
-import { colors } from "@/styles/colors";
+import { colors } from '@/styles/colors'
 
 interface EventProps {
   event: {
@@ -33,8 +33,8 @@ export function Event({ event }: EventProps) {
         {
           checkIn ? (
             <View className="flex-row items-center gap-2">
-              <MaterialCommunityIcons
-                name={checkIn ? "checkbox-blank-outline" : "checkbox-outline"}
+              <MaterialIcons
+                name={checkIn ? "check-box-outline-blank" : "check-box"}
                 size={24}
                 color={colors.orange[500]}
                 />
@@ -43,8 +43,8 @@ export function Event({ event }: EventProps) {
             
           ) : (
             <View className="flex-row items-center gap-2">
-              <MaterialCommunityIcons
-                name={checkIn ? "checkbox-blank-outline" : "checkbox-outline"}
+              <MaterialIcons
+                name={checkIn ? "check-box-outline-blank" : "check-box"}
                 size={24}
                 color={colors.green[200]}
               />

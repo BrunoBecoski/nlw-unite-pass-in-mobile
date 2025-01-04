@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Alert, Image, StatusBar, View } from 'react-native'
 import { Link, Redirect, router } from 'expo-router'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
 import { useBadgeStore } from '@/store/badge-store'
@@ -58,8 +58,8 @@ export default function Home() {
 
       <View className="w-full mt-12 gap-3">
         <Input>
-          <MaterialCommunityIcons 
-            name="ticket-confirmation-outline"
+          <MaterialIcons
+            name="confirmation-num"
             size={20}
             color={colors.green[200]}
           />

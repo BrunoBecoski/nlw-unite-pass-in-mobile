@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { ScrollView, StatusBar, Text, View, TouchableOpacity, Alert, Modal, Share } from 'react-native'
 import { Redirect } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker'
-import { FontAwesome } from '@expo/vector-icons'
+// import { FontAwesome } from '@expo/vector-icons'
 import { MotiView } from 'moti'
 
 import { useBadgeStore } from '@/store/badge-store'

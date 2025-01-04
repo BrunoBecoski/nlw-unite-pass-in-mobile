@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity, View } from 'react-native'
 import { router } from 'expo-router'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 
 import { colors } from '@/styles/colors'
 
@@ -18,9 +18,9 @@ export function Header({ title, back = false, handleExit }: HeaderProps) {
 
       { back &&
         <TouchableOpacity onPress={() => router.back()}>
-          <MaterialCommunityIcons
+          <MaterialIcons
             className="h-12"
-            name="keyboard-backspace"
+            name="arrow-back-ios"
             size={24}
             color={colors.orange[500]}
           />
@@ -35,7 +35,7 @@ export function Header({ title, back = false, handleExit }: HeaderProps) {
 
       { handleExit &&
         <TouchableOpacity onPress={handleExit}>
-          <MaterialCommunityIcons
+          <MaterialIcons
             className="h-12"
             name="logout"
             size={24}
