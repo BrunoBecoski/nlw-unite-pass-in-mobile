@@ -67,6 +67,7 @@ export default function Home() {
             placeholder="Seu código de participante"
             onChangeText={setCode}
             value={code}
+            keyboardType='numeric'
           />
         </Input>
 
