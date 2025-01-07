@@ -1,22 +1,23 @@
-import { useEffect, useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { useEffect, useState } from 'react'
+import { Alert, FlatList, Text, View } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
 
-import { api } from '@/server/api';
-import { Header } from '@/components/header';
-import { Event } from '@/components/event';
-import { Input } from '@/components/input';
-import { Button } from '@/components/button';
-import { colors } from '@/styles/colors';
+import { api } from '@/server/api'
+import { Header } from '@/components/header'
+import { Input } from '@/components/input'
+import { Button } from '@/components/button'
+import { EventEvents } from '@/components/eventEvents'
+import { colors } from '@/styles/colors'
 
-type EventType = {
+export type EventType = {
   id: string,
   slug: string,
   title: string,
   details: string,
   startDate: Date,
   endDate: Date,
-  checkIn: boolean,
+  attendees: number
+  maximumAttendees: number
 }
 
 export default function Events() {
@@ -25,6 +26,19 @@ export default function Events() {
   const [isLoading, setIsLoading] = useState(false)
   const [total, setTotal] = useState(0)
   const [index, setIndex] = useState(1)
+
+  function handleJoin(event: EventType) {
+    Alert.alert('Participar do Evento', `Deseja participar do evento ${event.title}`, [
+      {
+        text: 'Cancelar',
+        onPress: () => {},
+      },
+      {
+        text: 'Participar',
+        onPress: () => {} ,
+      }
+    ])
+  }
 
   useEffect(() => {
     fetchEvents() 
@@ -68,7 +82,6 @@ export default function Events() {
     setIsLoading(false)
   }
 
-
   return (
     <View className="flex-1 bg-green-500">
       <Header title="Eventos" back />
@@ -103,7 +116,7 @@ export default function Events() {
         data={events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Event event={item} />
+          <EventEvents event={item} handleJoin={handleJoin} />
         )}
         ListFooterComponent={
           <Button 
