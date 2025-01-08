@@ -1,9 +1,9 @@
 import { Redirect, router } from 'expo-router'
 import { Alert, FlatList, Image, StatusBar, Text, View } from 'react-native'
 
-import { useAttendeeStore } from '@/store/attendee-store'
+import { EventAttendeeType, useAttendeeStore } from '@/store/attendee-store'
 import { Header } from '@/components/header';
-import { Event } from '@/components/event';
+import { EventAttendee } from '@/components/eventAttendee';
 import { Button } from '@/components/button';
 
 export default function Attendee() {
@@ -29,6 +29,19 @@ export default function Attendee() {
       {
         text: 'Sair',
         onPress: attendeeStore.remove,
+      }
+    ])
+  }
+
+  function handleCheckIn(event: EventAttendeeType) {
+    Alert.alert('Fazer Check-in', `Deseja fazer o check-in no evento ${event.title}`, [
+      {
+        text: 'Cancelar',
+        onPress: () => {},
+      },
+      {
+        text: 'Check-in',
+        onPress: () => {},
       }
     ])
   }
@@ -61,7 +74,7 @@ export default function Attendee() {
         data={events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <Event event={item} />
+          <EventAttendee event={item} handleCheckIn={handleCheckIn} />
         )}
       />
 

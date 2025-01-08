@@ -2,21 +2,23 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export interface AttendeeStoreProps {
+export type EventAttendeeType = {
+  id: string,
+  slug: string,
+  title: string,
+  details: string,
+  startDate: Date,
+  endDate: Date,
+  checkIn: boolean,
+}
+
+interface AttendeeStoreProps {
   id: string
   code: string
   name: string
   email: string
-  events: {
-    id: string,
-    slug: string,
-    title: string,
-    details: string,
-    startDate: Date,
-    endDate: Date,
-    checkIn: boolean,
-  }[]      
-  total: number,
+  events: EventAttendeeType[]   
+  total: number
 }
 
 interface StateProps {

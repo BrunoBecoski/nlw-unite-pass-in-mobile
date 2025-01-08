@@ -1,12 +1,12 @@
 import { Text, View } from 'react-native'
 import dayjs from 'dayjs'
 
-import { EventType } from '@/app/events'
+import { EventEventsType } from '@/app/events'
 import { Button } from './button'
 
 interface EventEventsProps {
-  event: EventType
-  handleJoin: (event: EventType) => void
+  event: EventEventsType
+  handleJoin: (event: EventEventsType) => void
 }
 
 export function EventEvents({ event, handleJoin }: EventEventsProps) {

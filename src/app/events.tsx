@@ -9,7 +9,7 @@ import { Button } from '@/components/button'
 import { EventEvents } from '@/components/eventEvents'
 import { colors } from '@/styles/colors'
 
-export type EventType = {
+export type EventEventsType = {
   id: string,
   slug: string,
   title: string,
@@ -22,12 +22,12 @@ export type EventType = {
 
 export default function Events() {
   const [search, setSearch] = useState('')
-  const [events, setEvents] = useState<EventType[]>([])
+  const [events, setEvents] = useState<EventEventsType[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [total, setTotal] = useState(0)
   const [index, setIndex] = useState(1)
 
-  function handleJoin(event: EventType) {
+  function handleJoin(event: EventEventsType) {
     Alert.alert('Participar do Evento', `Deseja participar do evento ${event.title}`, [
       {
         text: 'Cancelar',
