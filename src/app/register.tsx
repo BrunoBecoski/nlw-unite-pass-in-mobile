@@ -52,7 +52,7 @@ export default function Register() {
       }
 
       Alert.alert('Criação', 'Não foi possível fazer a inscrição!')
-    } 
+    }
   }
 
   return (

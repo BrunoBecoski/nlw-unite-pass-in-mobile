@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import dayjs from 'dayjs'
-import { tv, type VariantProps } from 'tailwind-variants'
+import { tv } from 'tailwind-variants'
 
 import { EventAttendeeType } from '@/store/attendee-store'
 import { colors } from '@/styles/colors'
@@ -29,8 +29,6 @@ const text = tv({
 
 export function EventAttendee({ event, handleCheckIn }: EventAttendeeProps) {
   const { title, slug, details, checkIn, startDate, endDate } = event
-
-  console.log(title + checkIn)
 
   return (
     <View className="my-6 px-6">

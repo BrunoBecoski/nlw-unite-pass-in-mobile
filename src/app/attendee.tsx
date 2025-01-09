@@ -1,6 +1,8 @@
 import { Redirect, router } from 'expo-router'
 import { Alert, FlatList, Image, StatusBar, Text, View } from 'react-native'
+import axios from 'axios';
 
+import { api } from '@/server/api';
 import { EventAttendeeType, useAttendeeStore } from '@/store/attendee-store'
 import { Header } from '@/components/header';
 import { EventAttendee } from '@/components/eventAttendee';
@@ -14,6 +16,7 @@ export default function Attendee() {
   }
 
   const {
+    id,
     code,
     name,
     email,
@@ -41,16 +44,31 @@ export default function Attendee() {
       },
       {
         text: 'Check-in',
-        onPress: () => {},
+        onPress: () => fetchCheckIn(event),
       }
     ])
   }
 
-  return (
-  <View className="flex-1 bg-green-500">
-    <StatusBar barStyle="light-content" />
+  async function fetchCheckIn(event: EventAttendeeType) {
+    try {
+      await api.get(`/check-in/event/${event.id}/attendee/${id}`)
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (String(error.response?.data.message).includes('Email está sendo utilizado.')) {
+          return Alert.alert('Check-in', error.response?.data.message)
+        }
+      }
 
-    <Header title="Minha conta" handleExit={handleExit} />
+      Alert.alert('Check-in', 'Não foi possível fazer o check-in no evento!')
+    }
+  }
+
+  return (
+    <View className="flex-1 bg-green-500">
+      <StatusBar barStyle="light-content" />
+
+      <Header title="Minha conta" handleExit={handleExit} />
+
       <View className="items-center py-4">
         <Text className="text-zinc-50 text-lg font-bold mb-4">Código #{code}</Text>
 
