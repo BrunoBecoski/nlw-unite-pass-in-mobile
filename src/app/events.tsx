@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Alert, FlatList, Text, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
+import axios from 'axios'
 
+import { useAttendeeStore } from '@/store/attendee-store'
 import { api } from '@/server/api'
 import { Header } from '@/components/header'
 import { Input } from '@/components/input'
@@ -27,6 +29,8 @@ export default function Events() {
   const [total, setTotal] = useState(0)
   const [index, setIndex] = useState(1)
 
+  const attendeeStore = useAttendeeStore()
+
   function handleJoin(event: EventEventsType) {
     Alert.alert('Participar do Evento', `Deseja participar do evento ${event.title}`, [
       {
@@ -35,7 +39,7 @@ export default function Events() {
       },
       {
         text: 'Participar',
-        onPress: () => {} ,
+        onPress: () => fetchEventAttendee(event),
       }
     ])
   }
@@ -80,6 +84,22 @@ export default function Events() {
     setEvents(newEvents)
 
     setIsLoading(false)
+  }
+
+  async function fetchEventAttendee(event: EventEventsType) {
+    if (attendeeStore.data?.code) {
+      try {
+        await api.get(`/create/event/${event.slug}/attendee/${attendeeStore.data.code}`)
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (String(error.response?.data.message)) {
+            return Alert.alert('Participar', error.response?.data.message)
+          }
+        }
+
+        Alert.alert('Participar', 'Não foi possível participar do evento!')
+      }
+    }
   }
 
   return (

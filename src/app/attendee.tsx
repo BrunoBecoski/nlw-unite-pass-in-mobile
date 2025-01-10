@@ -2,8 +2,8 @@ import { Redirect, router } from 'expo-router'
 import { Alert, FlatList, Image, StatusBar, Text, View } from 'react-native'
 import axios from 'axios';
 
-import { api } from '@/server/api';
 import { EventAttendeeType, useAttendeeStore } from '@/store/attendee-store'
+import { api } from '@/server/api';
 import { Header } from '@/components/header';
 import { EventAttendee } from '@/components/eventAttendee';
 import { Button } from '@/components/button';
@@ -54,7 +54,7 @@ export default function Attendee() {
       await api.get(`/check-in/event/${event.id}/attendee/${id}`)
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        if (String(error.response?.data.message).includes('Email está sendo utilizado.')) {
+        if (String(error.response?.data.message)) {
           return Alert.alert('Check-in', error.response?.data.message)
         }
       }
