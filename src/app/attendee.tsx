@@ -1,15 +1,20 @@
+import { useState } from 'react'
 import { Redirect, router } from 'expo-router'
 import { Alert, FlatList, Image, StatusBar, Text, View } from 'react-native'
-import axios from 'axios';
+import axios from 'axios'
 
+import { api } from '@/server/api'
 import { EventAttendeeType, useAttendeeStore } from '@/store/attendee-store'
-import { api } from '@/server/api';
-import { Header } from '@/components/header';
-import { EventAttendee } from '@/components/eventAttendee';
-import { Button } from '@/components/button';
+import { Header } from '@/components/header'
+import { EventAttendee } from '@/components/eventAttendee'
+import { Button } from '@/components/button'
 
 export default function Attendee() {
-  const attendeeStore = useAttendeeStore();
+  const attendeeStore = useAttendeeStore()
+
+  const [events, setEvents] = useState<EventAttendeeType[]>(attendeeStore.data ? attendeeStore.data.events : [])
+  const [total, setTotal] = useState(attendeeStore.data ? attendeeStore.data.total : 0)
+  const [index, setIndex] = useState(1)
 
   if (attendeeStore.data == null) {
     return <Redirect href="/" />
@@ -20,7 +25,6 @@ export default function Attendee() {
     code,
     name,
     email,
-    events
   } = attendeeStore.data
 
   function handleExit() {
@@ -34,6 +38,17 @@ export default function Attendee() {
         onPress: attendeeStore.remove,
       }
     ])
+  }
+
+  async function fetchEventsIndex() {
+    const newIndex = index + 1
+
+    const { data } = await api.get(`/get/attendee/${code}?pageIndex=${newIndex}`)
+    
+    const newEvents = [...events, ...data.attendee.events]
+    
+    setIndex(newIndex)
+    setEvents(newEvents)
   }
 
   function handleCheckIn(event: EventAttendeeType) {
@@ -90,7 +105,7 @@ export default function Attendee() {
         </Text>
       </View>
 
-      <Text className="text-zinc-50 text-3xl px-4">Meus eventos</Text>
+      <Text className="text-zinc-50 text-2xl font-semibold text-center mb-6">Participando de {total} eventos</Text>
 
       <FlatList
         data={events}
@@ -98,9 +113,18 @@ export default function Attendee() {
         renderItem={({ item }) => (
           <EventAttendee event={item} handleCheckIn={handleCheckIn} />
         )}
+        ListHeaderComponent={
+          <Button title="Buscar novos eventos" onPress={() => router.navigate('/events')} />
+        }
+        ListHeaderComponentClassName="items-center"
+        ListFooterComponent={
+          <Button 
+            title="Mostrar mais eventos"
+            onPress={fetchEventsIndex}
+          />
+        }
+        ListFooterComponentClassName={ Math.ceil(total / 10) > index ? 'm-10' : 'hidden' }
       />
-
-      <Button title="Ver eventos" onPress={() => router.navigate('/events')} />
     </View>
   )
 }
