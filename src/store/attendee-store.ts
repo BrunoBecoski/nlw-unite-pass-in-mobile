@@ -24,6 +24,7 @@ interface AttendeeStoreProps {
 interface StateProps {
   data: AttendeeStoreProps | null 
   save: (data: AttendeeStoreProps) => void
+  update: (data: AttendeeStoreProps) => void
   remove: () => void
 }
 
@@ -33,6 +34,8 @@ export const useAttendeeStore = create(
       data: null,
 
       save: (data: AttendeeStoreProps) => set(() => ({ data })),
+
+      update: (data: AttendeeStoreProps) => set(() => ({ data: data })),
 
       remove: () => set(() => ({ data: null })),
     }), {

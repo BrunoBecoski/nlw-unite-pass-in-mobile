@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Alert, FlatList, Text, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
+import { router } from 'expo-router'
 import axios from 'axios'
 
 import { useAttendeeStore } from '@/store/attendee-store'
@@ -90,6 +91,12 @@ export default function Events() {
     if (attendeeStore.data?.code) {
       try {
         await api.get(`/create/event/${event.slug}/attendee/${attendeeStore.data.code}`)
+
+        const { data } = await api.get(`/get/attendee/${attendeeStore.data?.code}`)
+        attendeeStore.update(data.attendee)
+
+        router.push('/attendee')
+
       } catch (error) {
         if (axios.isAxiosError(error)) {
           if (String(error.response?.data.message)) {

@@ -52,6 +52,10 @@ export default function Attendee() {
   async function fetchCheckIn(event: EventAttendeeType) {
     try {
       await api.get(`/check-in/event/${event.id}/attendee/${id}`)
+
+      const { data } = await api.get(`/get/attendee/${code}`)
+      attendeeStore.update(data.attendee)
+      
     } catch (error) {
       if (axios.isAxiosError(error)) {
         if (String(error.response?.data.message)) {
