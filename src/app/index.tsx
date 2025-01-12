@@ -4,7 +4,6 @@ import { Link, Redirect, router } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
-import { useBadgeStore } from '@/store/badge-store'
 import { useAttendeeStore } from '@/store/attendee-store'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
@@ -14,8 +13,7 @@ export default function Home() {
   const [code, setCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const badgeStore = useBadgeStore();
-  const attendeeStore = useAttendeeStore();
+  const attendeeStore = useAttendeeStore()
 
   async function handleAccessCredential() {
     try {
@@ -28,7 +26,6 @@ export default function Home() {
       const { data } = await api.get(`/get/attendee/${code}`)
 
       attendeeStore.save(data.attendee)
-      // badgeStore.save(data.badge)
     } catch (error) {
       console.log(error)
 
@@ -37,10 +34,6 @@ export default function Home() {
       Alert.alert('Participante', 'Participante não encontrado!')
     }
   }
-
-  // if (badgeStore.data?.checkInUrl) {
-  //   return <Redirect href="/ticket" />
-  // }
 
   if (attendeeStore.data) {
     return <Redirect href="/attendee" />

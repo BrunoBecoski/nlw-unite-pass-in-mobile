@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Redirect, router } from 'expo-router'
-import { Alert, FlatList, Image, StatusBar, Text, View } from 'react-native'
+import { Alert, FlatList, Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons'
+import * as ImagePicker from 'expo-image-picker'
 import axios from 'axios'
 
 import { api } from '@/server/api'
@@ -8,6 +10,7 @@ import { EventAttendeeType, useAttendeeStore } from '@/store/attendee-store'
 import { Header } from '@/components/header'
 import { EventAttendee } from '@/components/eventAttendee'
 import { Button } from '@/components/button'
+import { colors } from '@/styles/colors'
 
 export default function Attendee() {
   const attendeeStore = useAttendeeStore()
@@ -25,6 +28,7 @@ export default function Attendee() {
     code,
     name,
     email,
+    image,
   } = attendeeStore.data
 
   function handleExit() {
@@ -40,17 +44,6 @@ export default function Attendee() {
     ])
   }
 
-  async function fetchEventsIndex() {
-    const newIndex = index + 1
-
-    const { data } = await api.get(`/get/attendee/${code}?pageIndex=${newIndex}`)
-    
-    const newEvents = [...events, ...data.attendee.events]
-    
-    setIndex(newIndex)
-    setEvents(newEvents)
-  }
-
   function handleCheckIn(event: EventAttendeeType) {
     Alert.alert('Fazer Check-in', `Deseja fazer o check-in no evento ${event.title}`, [
       {
@@ -62,6 +55,34 @@ export default function Attendee() {
         onPress: () => fetchCheckIn(event),
       }
     ])
+  }
+
+  async function handleSelectAvatar() {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 4]
+      })
+
+      if (result.assets) {
+        attendeeStore.updateAvatar(result.assets[0].uri)
+      }
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Foto', 'Não foi possível selecionar a imagem.')
+    }
+  }
+
+  async function fetchEventsIndex() {
+    const newIndex = index + 1
+
+    const { data } = await api.get(`/get/attendee/${code}?pageIndex=${newIndex}`)
+    
+    const newEvents = [...events, ...data.attendee.events]
+    
+    setIndex(newIndex)
+    setEvents(newEvents)
   }
 
   async function fetchCheckIn(event: EventAttendeeType) {
@@ -91,10 +112,28 @@ export default function Attendee() {
       <View className="items-center py-4">
         <Text className="text-zinc-50 text-lg font-bold mb-4">Código #{code}</Text>
 
-        <Image
-          className="w-36 h-36 rounded-full"
-          source={{ uri: 'https://www.github.com/brunobecoski.png' }}
-        />
+        { image
+          ?
+            <TouchableOpacity activeOpacity={0.9} onPress={handleSelectAvatar}>
+              <View>
+                <Image
+                  className="w-36 h-36 rounded-full"
+                  source={{ uri: image }}
+                />
+
+              </View>
+            </TouchableOpacity>
+          :
+            <TouchableOpacity activeOpacity={0.9} onPress={handleSelectAvatar}>
+              <View className="w-36 h-36 rounded-full bg-gray-400 items-center justify-center">
+                <MaterialIcons
+                  name="camera-alt"
+                  color={colors.green[400]}
+                  size={32}
+                />
+              </View>
+            </TouchableOpacity>
+        }
 
         <Text className="font-bold text-2xl text-zinc-50 mt-4">
           {name}

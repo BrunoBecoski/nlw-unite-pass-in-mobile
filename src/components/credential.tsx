@@ -2,7 +2,7 @@ import { Image, ImageBackground, Text, TouchableOpacity, View, useWindowDimensio
 // import { Feather } from '@expo/vector-icons'
 import { MotiView } from 'moti'
 
-import { BadgeStoreProps } from '@/store/badge-store'
+// import { BadgeStoreProps } from '@/store/badge-store'
 import { QRCode } from '@/components/qrcode'
 import { colors } from '@/styles/colors'
 
