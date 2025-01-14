@@ -1,18 +1,21 @@
 import { Image, ImageBackground, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native'
-// import { Feather } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import { MotiView } from 'moti'
 
-// import { BadgeStoreProps } from '@/store/badge-store'
+import { AttendeeStoreProps, EventAttendeeType } from '@/store/attendee-store'
 import { QRCode } from '@/components/qrcode'
 import { colors } from '@/styles/colors'
+import { Redirect } from 'expo-router'
 
 interface CredentialProps {
-  data: BadgeStoreProps
+  attendee: AttendeeStoreProps
+  event: EventAttendeeType
+  checkInUrl: string
   onChangeAvatar?: () => void
   onExpandQRCode?: () => void
 }
 
-export function Credential({ data, onChangeAvatar, onExpandQRCode }: CredentialProps) {
+export function Credential({ attendee, event, checkInUrl, onChangeAvatar, onExpandQRCode }: CredentialProps) {
   const { height } = useWindowDimensions()
 
   return (
@@ -53,41 +56,41 @@ export function Credential({ data, onChangeAvatar, onExpandQRCode }: CredentialP
           source={require('@/assets/ticket/header.png')}
         >
           <View className="w-full flex-row items-center justify-between">
-            <Text className="text-zinc-50 text-sm font-bold">{data.eventTitle}</Text>
-            <Text className="text-zinc-50 text-sm font-bold">#{data.id}</Text>
+            <Text className="text-zinc-50 text-sm font-bold">{event.title}</Text>
+            <Text className="text-zinc-50 text-sm font-bold">#{attendee.code}</Text>
           </View>
 
           <View className="w-40 h-40 bg-black rounded-full" />
         </ImageBackground>
 
-        {data.image 
+        {attendee.image 
           ?
             <TouchableOpacity onPress={onChangeAvatar} activeOpacity={0.9}>
               <View>
                 <Image
                   className="w-36 h-36 rounded-full -mt-24"
-                  source={{ uri: data.image}}
+                  source={{ uri: attendee.image}}
                 />
               </View>
             </TouchableOpacity>
           :
             <TouchableOpacity onPress={onChangeAvatar} activeOpacity={0.9}>
               <View className="w-36 h-36 rounded-full -mt-24 bg-gray-400 items-center justify-center">
-                <Feather className="" name="camera" color={colors.green[400]} size={32} />
+                <MaterialIcons name="camera-alt" color={colors.green[400]} size={32} />
               </View>
             </TouchableOpacity>
         }
 
         <Text className="font-bold text-2xl text-zinc-50 mt-4">
-          {data.name}
+          {attendee.name}
         </Text>
 
         <Text className="font-regular text-base text-zinc-300 mb-4">
-          {data.email}
+          {attendee.email}
         </Text>
 
         <QRCode
-          value={data.checkInUrl}
+          value={checkInUrl}
           size={120}
         />
 

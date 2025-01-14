@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { ScrollView, StatusBar, Text, View, TouchableOpacity, Alert, Modal, Share } from 'react-native'
-import { Redirect } from 'expo-router'
+import { Redirect, router, useLocalSearchParams } from 'expo-router'
 import * as ImagePicker from 'expo-image-picker'
 import { FontAwesome } from '@expo/vector-icons'
 import { MotiView } from 'moti'
+import axios from 'axios'
 
-// import { useBadgeStore } from '@/store/badge-store'
+import { api } from '@/server/api'
+import { useAttendeeStore } from '@/store/attendee-store'
 import { Header } from '@/components/header'
 import { Credential } from '@/components/credential'
 import { colors } from '@/styles/colors'
@@ -15,22 +17,23 @@ import { QRCode } from '@/components/qrcode'
 export default function Ticket() {
   const [expandQRCode, setExpandQRCode] = useState(false)
 
-  // const badgeStore = useBadgeStore()
+  const { slug } = useLocalSearchParams<{ slug: string }>()
 
-  async function handleShare() {
-    try {
-      if (badgeStore.data?.checkInUrl) {
-        await Share.share({
-          message: badgeStore.data.checkInUrl,
-        })
-      }
-      
-    } catch (error) {
-      console.log(error)
+  const attendeeStore = useAttendeeStore()
 
-      Alert.alert('Compartilhar', 'Não foi possível compartilhar!') 
-    }
+  if (attendeeStore.data == null) {
+    return <Redirect href="/" />
   }
+
+  const attendee = attendeeStore.data
+
+  const event = attendee.events.find((event) => event.slug === slug)
+
+  if (event == undefined) {
+    return <Redirect href="/attendee" />
+  }
+
+  const checkInUrl = `http://192.168.0.163:3333/check-in/event/${event.id}/attendee/${attendee.id}`
 
   async function handleSelectImage() {
     try {
@@ -41,7 +44,7 @@ export default function Ticket() {
       })
 
       if (result.assets) {
-        badgeStore.updateAvatar(result.assets[0].uri)
+        attendeeStore.updateAvatar(result.assets[0].uri)
       }
     } catch (error) {
       console.log(error)
@@ -49,8 +52,35 @@ export default function Ticket() {
     }
   }
 
-  if (!badgeStore.data?.checkInUrl) {
-    return <Redirect href="/" />
+  function handleCheckIn() {
+    Alert.alert('Fazer Check-in', `Deseja fazer o check-in no evento ${event?.title}`, [
+      {
+        text: 'Cancelar',
+        onPress: () => {},
+      },
+      {
+        text: 'Check-in',
+        onPress: () => fetchCheckIn(),
+      }
+    ])
+  }
+
+  async function fetchCheckIn() {
+    try {
+      await api.get(`/check-in/event/${event?.id}/attendee/${attendee?.id}`)
+
+      const { data } = await api.get(`/get/attendee/${attendee?.code}`)
+      attendeeStore.update(data.attendee)
+      
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (String(error.response?.data.message)) {
+          return Alert.alert('Check-in', error.response?.data.message)
+        }
+      }
+
+      Alert.alert('Check-in', 'Não foi possível fazer o check-in no evento!')
+    }
   }
 
   return (
@@ -65,7 +95,9 @@ export default function Ticket() {
         showsVerticalScrollIndicator={false}
       >
         <Credential
-          data={badgeStore.data}
+          attendee={attendee}
+          event={event}
+          checkInUrl={checkInUrl}
           onChangeAvatar={handleSelectImage}
           onExpandQRCode={() =>  setExpandQRCode(true)}
         />
@@ -91,26 +123,26 @@ export default function Ticket() {
           />
         </MotiView>
 
-        <Text className="text-white font-bold text-2xl mt-4">
-          Compartilhar credencial
+        <Text className="text-white font-bold text-2xl mt-4 text-center">
+          {event.title}
         </Text>
 
-        <Text className="text-white font-regular text-base mt-1 mb-6">
-          Mostre ao mundo que você vai participar do evento {badgeStore.data.eventTitle}!
+        <Text className="text-white font-regular text-base mt-1 mb-6 text-center">
+          {event.details}
         </Text>
 
         <Button 
-          title="Compartilhar"
-          onPress={handleShare}
+          title="Fazer Check-in"
+          onPress={handleCheckIn}
         />
 
         <TouchableOpacity 
           activeOpacity={0.7}
-          onPress={() => badgeStore.remove()}
+          onPress={() => router.back()}
         >
           <View className="mt-10">
             <Text className="text-base text-white font-bold text-center">
-              Remover ingresso
+              Voltar
             </Text>
           </View>
         </TouchableOpacity>
@@ -118,7 +150,7 @@ export default function Ticket() {
 
       <Modal visible={expandQRCode} statusBarTranslucent>
         <View className="flex-1 bg-green-500 items-center justify-center">
-          <QRCode value='test' size={300} />
+          <QRCode value={checkInUrl} size={300} />
 
           <TouchableOpacity activeOpacity={0.7} onPress={() => setExpandQRCode(false)}>
             <Text className="font-body text-orange-500 text-sm text-center mt-10">

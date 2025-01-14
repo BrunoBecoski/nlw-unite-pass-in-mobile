@@ -3,7 +3,6 @@ import { Redirect, router } from 'expo-router'
 import { Alert, FlatList, Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
-import axios from 'axios'
 
 import { api } from '@/server/api'
 import { EventAttendeeType, useAttendeeStore } from '@/store/attendee-store'
@@ -44,18 +43,6 @@ export default function Attendee() {
     ])
   }
 
-  function handleCheckIn(event: EventAttendeeType) {
-    Alert.alert('Fazer Check-in', `Deseja fazer o check-in no evento ${event.title}`, [
-      {
-        text: 'Cancelar',
-        onPress: () => {},
-      },
-      {
-        text: 'Check-in',
-        onPress: () => fetchCheckIn(event),
-      }
-    ])
-  }
 
   async function handleSelectAvatar() {
     try {
@@ -83,24 +70,6 @@ export default function Attendee() {
     
     setIndex(newIndex)
     setEvents(newEvents)
-  }
-
-  async function fetchCheckIn(event: EventAttendeeType) {
-    try {
-      await api.get(`/check-in/event/${event.id}/attendee/${id}`)
-
-      const { data } = await api.get(`/get/attendee/${code}`)
-      attendeeStore.update(data.attendee)
-      
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (String(error.response?.data.message)) {
-          return Alert.alert('Check-in', error.response?.data.message)
-        }
-      }
-
-      Alert.alert('Check-in', 'Não foi possível fazer o check-in no evento!')
-    }
   }
 
   return (
@@ -152,7 +121,7 @@ export default function Attendee() {
         data={events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <EventAttendee event={item} handleCheckIn={handleCheckIn} />
+          <EventAttendee event={item} />
         )}
         ListHeaderComponent={
           <Text className="text-zinc-50 text-3xl font-bold ml-6">Meus eventos: {total}</Text>

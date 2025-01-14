@@ -12,7 +12,7 @@ export type EventAttendeeType = {
   checkIn: boolean,
 }
 
-interface AttendeeStoreProps {
+export type AttendeeStoreProps = {
   id: string
   code: string
   name: string

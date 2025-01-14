@@ -6,10 +6,10 @@ import { tv } from 'tailwind-variants'
 import { EventAttendeeType } from '@/store/attendee-store'
 import { colors } from '@/styles/colors'
 import { Button } from './button'
+import { router } from 'expo-router'
 
 interface EventAttendeeProps {
   event: EventAttendeeType
-  handleCheckIn: (event: EventAttendeeType) => void
 }
 
 const text = tv({
@@ -27,7 +27,7 @@ const text = tv({
   }
 })
 
-export function EventAttendee({ event, handleCheckIn }: EventAttendeeProps) {
+export function EventAttendee({ event }: EventAttendeeProps) {
   const { title, slug, details, checkIn, startDate, endDate } = event
 
   return (
@@ -40,26 +40,17 @@ export function EventAttendee({ event, handleCheckIn }: EventAttendeeProps) {
       <Text className="text-zinc-100 text-lg my-4">{details}</Text>
 
       <View className="flex-row justify-between items-center mb-4">
-
-        {checkIn ? (
-            <View className="flex-row items-center gap-2">
-              <MaterialIcons
-                name="check-box"
-                size={24}
-                color={colors.green[200]}
-              />
-              <Text className="text-green-200 text-xl font-semibold">Check-in </Text>
-            </View>
-          ) : (
-            <Button title="Check-in" onPress={() => handleCheckIn(event)}  disabled={checkIn}>
-                  <MaterialIcons
-                name="check-box-outline-blank"
-                size={24}
-                color={colors.green[200]}
-              />
-            </Button>
-        )}
-
+        <Button 
+          title="Ver tíquete"
+          onPress={ () => router.navigate(`/ticket/${slug}`)}
+        >
+          <MaterialIcons
+            name="check-box-outline-blank"
+            size={24}
+            color={colors.green[200]}
+          />
+        </Button>
+  
         <View className="flex-row items-center">
           <Text className="text-zinc-300 italic font-black text-xl">
             {dayjs(startDate).format('DD/MM/YY')}
