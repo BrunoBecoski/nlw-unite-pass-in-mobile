@@ -34,7 +34,6 @@ export default function Register() {
 
       attendeeStore.save(data.attendee)
 
-
       Alert.alert('Criação', 'Contra crida com sucesso!',[
         {
           text: 'OK',

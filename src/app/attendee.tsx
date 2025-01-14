@@ -144,7 +144,9 @@ export default function Attendee() {
         </Text>
       </View>
 
-      <Text className="text-zinc-50 text-2xl font-semibold text-center mb-6">Participando de {total} eventos</Text>
+      <View className="items-center mb-6">
+        <Button title="Buscar novos eventos"  onPress={() => router.navigate('/events')} />
+      </View>
 
       <FlatList
         data={events}
@@ -153,9 +155,9 @@ export default function Attendee() {
           <EventAttendee event={item} handleCheckIn={handleCheckIn} />
         )}
         ListHeaderComponent={
-          <Button title="Buscar novos eventos" onPress={() => router.navigate('/events')} />
+          <Text className="text-zinc-50 text-3xl font-bold ml-6">Meus eventos: {total}</Text>
         }
-        ListHeaderComponentClassName="items-center"
+        ListHeaderComponentClassName="mt-4"
         ListFooterComponent={
           <Button 
             title="Mostrar mais eventos"
