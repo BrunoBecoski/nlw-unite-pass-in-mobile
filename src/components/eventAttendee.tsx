@@ -3,13 +3,13 @@ import { MaterialIcons } from '@expo/vector-icons'
 import dayjs from 'dayjs'
 import { tv } from 'tailwind-variants'
 
-import { EventAttendeeType } from '@/store/attendee-store'
+import { EventStoreType } from '@/store/events-store'
 import { colors } from '@/styles/colors'
 import { Button } from './button'
 import { router } from 'expo-router'
 
 interface EventAttendeeProps {
-  event: EventAttendeeType
+  event: EventStoreType
 }
 
 const text = tv({

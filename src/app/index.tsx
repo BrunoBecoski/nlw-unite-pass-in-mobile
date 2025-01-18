@@ -5,6 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
+import { useEventsStore } from '@/store/events-store'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { colors } from '@/styles/colors'
@@ -14,6 +15,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
 
   const attendeeStore = useAttendeeStore()
+  const eventStore = useEventsStore()
 
   async function handleAccessCredential() {
     try {
@@ -23,8 +25,11 @@ export default function Home() {
 
       setIsLoading(true)
 
-      const { data } = await api.get(`/get/attendee/${code}`)
-      attendeeStore.save(data.attendee)
+      const attendeeData = await api.get(`/get/attendee/${code}`)
+      attendeeStore.save(attendeeData.data.attendee)
+
+      const eventsData = await api.get(`/get/attendee/${code}/events`)
+      eventStore.save(eventsData.data.events)
     } catch (error) {
       console.log(error)
 

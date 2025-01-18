@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export type EventsStoreProps = {
+export type EventStoreType = {
   id: string,
   slug: string,
   title: string,
@@ -10,25 +10,25 @@ export type EventsStoreProps = {
   startDate: Date,
   endDate: Date,
   checkIn: boolean,
-}[]
+}
 
 interface StateProps {
-  data: EventsStoreProps | null
-  save: (data: EventsStoreProps) => void
-  update: (data: EventsStoreProps) => void
+  data: EventStoreType[] | []
+  save: (data: EventStoreType[]) => void
+  update: (data: EventStoreType[]) => void
   remove: () => void
 }
 
 export const useEventsStore = create(
   persist<StateProps>(
     (set) => ({
-      data: null,
+      data: [],
 
-      save: (data: EventsStoreProps) => set(() => ({ data })),
+      save: (data: EventStoreType[]) => set(() => ({ data })),
 
-      update: (data: EventsStoreProps) => set(() => ({ data: data })),
+      update: (data: EventStoreType[]) => set(() => ({ data: data })),
       
-      remove: () => set(() => ({ data: null }))
+      remove: () => set(() => ({ data: [] }))
     }), {
       name: 'nlw-unite:events',
       storage: createJSONStorage(() => AsyncStorage)

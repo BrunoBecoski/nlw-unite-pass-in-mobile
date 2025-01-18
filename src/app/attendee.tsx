@@ -1,10 +1,8 @@
-import { useEffect } from 'react'
 import { Redirect, router } from 'expo-router'
 import { Alert, FlatList, Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 
-import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
 import { useEventsStore } from '@/store/events-store'
 import { Header } from '@/components/header'
@@ -16,7 +14,7 @@ export default function Attendee() {
   const attendeeStore = useAttendeeStore()
   const eventsStore = useEventsStore()
 
-  if (attendeeStore.data == null || eventsStore.data == null) {
+  if (attendeeStore.data == null) {
     return <Redirect href="/" />
   }
 
@@ -35,9 +33,16 @@ export default function Attendee() {
       },
       {
         text: 'Sair',
-        onPress: attendeeStore.remove,
+        onPress: logout,
       }
     ])
+  }
+
+  function logout() {
+    attendeeStore.remove()
+    eventsStore.remove()
+
+    router.push('/')
   }
 
   async function handleSelectAvatar() {
@@ -55,16 +60,6 @@ export default function Attendee() {
       console.log(error)
       Alert.alert('Foto', 'Não foi possível selecionar a imagem.')
     }
-  }
-
-  useEffect(() => {
-    fetchEvents()
-  }, [])
-
-  async function fetchEvents() {
-    const responseEvents = await api.get(`/get/attendee/${code}/events`)
-
-    eventsStore.save(responseEvents.data.events)
   }
 
   return (

@@ -76,8 +76,8 @@ export default function Ticket() {
     try {
       await api.get(`/check-in/event/${event?.id}/attendee/${attendee?.id}`)
 
-      const { data } = await api.get(`/get/attendee/${attendee?.code}`)
-      attendeeStore.update(data.attendee)
+      const { data } = await api.get(`/get/attendee/${attendee?.code}/events`)
+      eventsStore.update(data.events)
       
     } catch (error) {
       if (axios.isAxiosError(error)) {

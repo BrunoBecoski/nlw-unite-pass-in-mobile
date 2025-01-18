@@ -4,8 +4,9 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import axios from 'axios'
 
-import { useAttendeeStore } from '@/store/attendee-store'
 import { api } from '@/server/api'
+import { useAttendeeStore } from '@/store/attendee-store'
+import { useEventsStore } from '@/store/events-store'
 import { Header } from '@/components/header'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
@@ -31,6 +32,7 @@ export default function Events() {
   const [index, setIndex] = useState(1)
 
   const attendeeStore = useAttendeeStore()
+  const eventsStore = useEventsStore()
 
   function handleJoin(event: EventEventsType) {
     Alert.alert('Participar do Evento', `Deseja participar do evento ${event.title}`, [
@@ -92,8 +94,8 @@ export default function Events() {
       try {
         await api.get(`/create/event/${event.slug}/attendee/${attendeeStore.data.code}`)
 
-        const { data } = await api.get(`/get/attendee/${attendeeStore.data?.code}`)
-        attendeeStore.update(data.attendee)
+        const { data } = await api.get(`/get/attendee/${attendeeStore.data?.code}/events`)
+        eventsStore.update(data.events)
 
         router.push('/attendee')
 
