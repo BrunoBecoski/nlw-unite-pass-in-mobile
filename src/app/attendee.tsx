@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { Redirect, router } from 'expo-router'
 import { Alert, FlatList, Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 
 import { api } from '@/server/api'
-import { EventAttendeeType, useAttendeeStore } from '@/store/attendee-store'
+import { useAttendeeStore } from '@/store/attendee-store'
+import { useEventsStore } from '@/store/events-store'
 import { Header } from '@/components/header'
 import { EventAttendee } from '@/components/eventAttendee'
 import { Button } from '@/components/button'
@@ -13,17 +14,13 @@ import { colors } from '@/styles/colors'
 
 export default function Attendee() {
   const attendeeStore = useAttendeeStore()
+  const eventsStore = useEventsStore()
 
-  const [events, setEvents] = useState<EventAttendeeType[]>(attendeeStore.data ? attendeeStore.data.events : [])
-  const [total, setTotal] = useState(attendeeStore.data ? attendeeStore.data.total : 0)
-  const [index, setIndex] = useState(1)
-
-  if (attendeeStore.data == null) {
+  if (attendeeStore.data == null || eventsStore.data == null) {
     return <Redirect href="/" />
   }
 
   const {
-    id,
     code,
     name,
     email,
@@ -43,7 +40,6 @@ export default function Attendee() {
     ])
   }
 
-
   async function handleSelectAvatar() {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -61,15 +57,14 @@ export default function Attendee() {
     }
   }
 
-  async function fetchEventsIndex() {
-    const newIndex = index + 1
+  useEffect(() => {
+    fetchEvents()
+  }, [])
 
-    const { data } = await api.get(`/get/attendee/${code}?pageIndex=${newIndex}`)
-    
-    const newEvents = [...events, ...data.attendee.events]
-    
-    setIndex(newIndex)
-    setEvents(newEvents)
+  async function fetchEvents() {
+    const responseEvents = await api.get(`/get/attendee/${code}/events`)
+
+    eventsStore.save(responseEvents.data.events)
   }
 
   return (
@@ -118,22 +113,14 @@ export default function Attendee() {
       </View>
 
       <FlatList
-        data={events}
+        data={eventsStore.data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <EventAttendee event={item} />
         )}
         ListHeaderComponent={
-          <Text className="text-zinc-50 text-3xl font-bold ml-6">Meus eventos: {total}</Text>
+          <Text className="text-zinc-50 text-3xl font-bold ml-6">Meus eventos: {eventsStore.data.length}</Text>
         }
-        ListHeaderComponentClassName="mt-4"
-        ListFooterComponent={
-          <Button 
-            title="Mostrar mais eventos"
-            onPress={fetchEventsIndex}
-          />
-        }
-        ListFooterComponentClassName={ Math.ceil(total / 10) > index ? 'm-10' : 'hidden' }
       />
     </View>
   )

@@ -8,6 +8,7 @@ import axios from 'axios'
 
 import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
+import { useEventsStore } from '@/store/events-store'
 import { Header } from '@/components/header'
 import { Credential } from '@/components/credential'
 import { colors } from '@/styles/colors'
@@ -20,14 +21,20 @@ export default function Ticket() {
   const { slug } = useLocalSearchParams<{ slug: string }>()
 
   const attendeeStore = useAttendeeStore()
+  const eventsStore = useEventsStore()
 
   if (attendeeStore.data == null) {
     return <Redirect href="/" />
   }
 
   const attendee = attendeeStore.data
+  const events = eventsStore.data
+  
+  if (events == null) {
+    return <Redirect href="/attendee" />
+  }
 
-  const event = attendee.events.find((event) => event.slug === slug)
+  const event = events.find((event) => event.slug === slug)
 
   if (event == undefined) {
     return <Redirect href="/attendee" />

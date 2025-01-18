@@ -24,7 +24,6 @@ export default function Home() {
       setIsLoading(true)
 
       const { data } = await api.get(`/get/attendee/${code}`)
-
       attendeeStore.save(data.attendee)
     } catch (error) {
       console.log(error)
