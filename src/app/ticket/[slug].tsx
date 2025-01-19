@@ -9,6 +9,7 @@ import axios from 'axios'
 import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
 import { useEventsStore } from '@/store/events-store'
+import { useAvatarStore } from '@/store/avatar-store'
 import { Header } from '@/components/header'
 import { Credential } from '@/components/credential'
 import { colors } from '@/styles/colors'
@@ -22,6 +23,7 @@ export default function Ticket() {
 
   const attendeeStore = useAttendeeStore()
   const eventsStore = useEventsStore()
+  const avatarStore = useAvatarStore()
 
   if (attendeeStore.data == null) {
     return <Redirect href="/" />
@@ -51,7 +53,7 @@ export default function Ticket() {
       })
 
       if (result.assets) {
-        attendeeStore.updateAvatar(result.assets[0].uri)
+        avatarStore.update(result.assets[0].uri)
       }
     } catch (error) {
       console.log(error)
@@ -104,6 +106,7 @@ export default function Ticket() {
         <Credential
           attendee={attendee}
           event={event}
+          avatar={avatarStore.data}
           checkInUrl={checkInUrl}
           onChangeAvatar={handleSelectImage}
           onExpandQRCode={() =>  setExpandQRCode(true)}

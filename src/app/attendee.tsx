@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker'
 
 import { useAttendeeStore } from '@/store/attendee-store'
 import { useEventsStore } from '@/store/events-store'
+import { useAvatarStore } from '@/store/avatar-store'
 import { Header } from '@/components/header'
 import { EventAttendee } from '@/components/eventAttendee'
 import { Button } from '@/components/button'
@@ -13,6 +14,7 @@ import { colors } from '@/styles/colors'
 export default function Attendee() {
   const attendeeStore = useAttendeeStore()
   const eventsStore = useEventsStore()
+  const avatarStore = useAvatarStore()
 
   if (attendeeStore.data == null) {
     return <Redirect href="/" />
@@ -22,8 +24,9 @@ export default function Attendee() {
     code,
     name,
     email,
-    image,
   } = attendeeStore.data
+
+  const avatar = avatarStore.data
 
   function handleExit() {
     Alert.alert('Sair da conta', `Sair da conta ${name}`, [
@@ -41,6 +44,7 @@ export default function Attendee() {
   function logout() {
     attendeeStore.remove()
     eventsStore.remove()
+    avatarStore.remove()
 
     router.push('/')
   }
@@ -54,7 +58,7 @@ export default function Attendee() {
       })
 
       if (result.assets) {
-        attendeeStore.updateAvatar(result.assets[0].uri)
+        avatarStore.save(result.assets[0].uri)
       }
     } catch (error) {
       console.log(error)
@@ -71,13 +75,13 @@ export default function Attendee() {
       <View className="items-center py-4">
         <Text className="text-zinc-50 text-lg font-bold mb-4">Código #{code}</Text>
 
-        { image
+        { avatar
           ?
             <TouchableOpacity activeOpacity={0.9} onPress={handleSelectAvatar}>
               <View>
                 <Image
                   className="w-36 h-36 rounded-full"
-                  source={{ uri: image }}
+                  source={{ uri: avatar, cache: 'reload' }}
                 />
 
               </View>

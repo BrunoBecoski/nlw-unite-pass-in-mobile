@@ -2,20 +2,22 @@ import { Image, ImageBackground, Text, TouchableOpacity, View, useWindowDimensio
 import { MaterialIcons } from '@expo/vector-icons'
 import { MotiView } from 'moti'
 
-import { AttendeeStoreProps, EventAttendeeType } from '@/store/attendee-store'
+import { AttendeeStoreProps } from '@/store/attendee-store'
+import { EventStoreType } from '@/store/events-store'
 import { QRCode } from '@/components/qrcode'
 import { colors } from '@/styles/colors'
 import { Redirect } from 'expo-router'
 
 interface CredentialProps {
   attendee: AttendeeStoreProps
-  event: EventAttendeeType
+  event: EventStoreType
+  avatar: string | null
   checkInUrl: string
   onChangeAvatar?: () => void
   onExpandQRCode?: () => void
 }
 
-export function Credential({ attendee, event, checkInUrl, onChangeAvatar, onExpandQRCode }: CredentialProps) {
+export function Credential({ attendee, event, avatar, checkInUrl, onChangeAvatar, onExpandQRCode }: CredentialProps) {
   const { height } = useWindowDimensions()
 
   return (
@@ -63,13 +65,13 @@ export function Credential({ attendee, event, checkInUrl, onChangeAvatar, onExpa
           <View className="w-40 h-40 bg-black rounded-full" />
         </ImageBackground>
 
-        {attendee.image 
+        {avatar 
           ?
             <TouchableOpacity onPress={onChangeAvatar} activeOpacity={0.9}>
               <View>
                 <Image
                   className="w-36 h-36 rounded-full -mt-24"
-                  source={{ uri: attendee.image}}
+                  source={{ uri: avatar }}
                 />
               </View>
             </TouchableOpacity>
