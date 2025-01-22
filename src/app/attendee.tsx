@@ -3,8 +3,9 @@ import { Alert, FlatList, Image, StatusBar, Text, TouchableOpacity, View } from 
 import { MaterialIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 
+import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
-import { useEventsStore } from '@/store/events-store'
+import { EventStoreType, useEventsStore } from '@/store/events-store'
 import { useAvatarStore } from '@/store/avatar-store'
 import { Header } from '@/components/header'
 import { EventAttendee } from '@/components/eventAttendee'
@@ -29,7 +30,7 @@ export default function Attendee() {
   const avatar = avatarStore.data
 
   function handleExit() {
-    Alert.alert('Sair da conta', `Sair da conta ${name}`, [
+    Alert.alert('Sair da conta', `Deseja sair da conta ${name}`, [
       {
         text: 'Cancelar',
         onPress: () => {},
@@ -63,6 +64,28 @@ export default function Attendee() {
     } catch (error) {
       console.log(error)
       Alert.alert('Foto', 'Não foi possível selecionar a imagem.')
+    }
+  }
+
+  function handleExitEvent(event: EventStoreType) {
+    Alert.alert('Sair do evento', `Deseja sair do evento ${event.title}`, [
+      {
+        text: 'Cancelar',
+        onPress: () => {},
+      },
+      {
+        text: 'Sair',
+        onPress: () => removeEvent(event),
+      }
+    ])
+  }
+
+  async function removeEvent(event: EventStoreType) {
+    try {
+      await api.delete(`/delete/event/${event.slug}/attendee/${code}`)
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Sair do evento', 'Não foi possível sair do evento.')
     }
   }
 
@@ -115,7 +138,7 @@ export default function Attendee() {
         data={eventsStore.data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <EventAttendee event={item} />
+          <EventAttendee event={item} exitEvent={() => handleExitEvent(item)}/>
         )}
         ListHeaderComponent={
           <Text className="text-zinc-50 text-3xl font-bold ml-6">Meus eventos: {eventsStore.data.length}</Text>

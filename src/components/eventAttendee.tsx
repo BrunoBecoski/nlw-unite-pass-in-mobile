@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Alert, Text, View } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons'
 import dayjs from 'dayjs'
 import { tv } from 'tailwind-variants'
@@ -10,6 +10,7 @@ import { router } from 'expo-router'
 
 interface EventAttendeeProps {
   event: EventStoreType
+  exitEvent: () => void
 }
 
 const text = tv({
@@ -27,22 +28,26 @@ const text = tv({
   }
 })
 
-export function EventAttendee({ event }: EventAttendeeProps) {
+export function EventAttendee({ event, exitEvent }: EventAttendeeProps) {
   const { title, slug, details, checkIn, startDate, endDate } = event
 
   return (
     <View className="my-6 px-6">
-      <View>
-        <Text className={text({ isCheckIn: checkIn })}>{title}</Text>
-        <Text className="text-gray-200">{slug}</Text>
+      <View className="flex-row items-start justify-between">
+        <View>
+          <Text className={text({ isCheckIn: checkIn })}>{title}</Text>
+          <Text className="text-gray-200">{slug}</Text>
+        </View>
+
+        <Button icon="delete" variant="icon" onPress={exitEvent} />
       </View>
 
       <Text className="text-zinc-100 text-lg my-4">{details}</Text>
 
       <View className="flex-row justify-between items-center mb-4">
-        <Button 
+        <Button
           title="Ver tíquete"
-          onPress={ () => router.navigate(`/ticket/${slug}`)}
+          onPress={() => router.navigate(`/ticket/${slug}`)}
         >
           <MaterialIcons
             name="check-box-outline-blank"

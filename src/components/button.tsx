@@ -32,12 +32,12 @@ const button = tv({
 })
 
 interface ButtonProps extends TouchableOpacityProps, VariantProps<typeof button> {
-  title: string;
+  title?: string;
   icon?: MaterialIconsTypes 
   isLoading?: boolean;
 }
 
-export function Button({ title, variant, size, icon, isLoading = false, ...props }: ButtonProps) {
+export function Button({ title, size, icon, variant = 'default', isLoading = false, ...props }: ButtonProps) {
   return (
     <TouchableOpacity
       disabled={isLoading}
@@ -51,15 +51,13 @@ export function Button({ title, variant, size, icon, isLoading = false, ...props
               className="text-green-500"
             />
           :
-            variant === 'icon' 
-            ? 
-              <TouchableOpacity>
-                <MaterialIcons name={icon} size={24} color={colors.orange[500]} />
-              </TouchableOpacity>
-            :
-              <Text className="text-green-500 text-base font-bold uppercase">
-                {title}
-              </Text>
+            variant === 'default' 
+              ?
+                <Text className="text-green-500 text-base font-bold uppercase">
+                  {title}
+                </Text>
+              : 
+                <MaterialIcons name={icon} size={32} color={colors.red[500]} />
           }
         </View>
       </TouchableOpacity>

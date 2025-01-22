@@ -15,4 +15,8 @@ export const colors = {
   orange: {
     500: '#F48F56',
   },
+
+  red: {
+    500: '#EF4444'
+  }
 }
