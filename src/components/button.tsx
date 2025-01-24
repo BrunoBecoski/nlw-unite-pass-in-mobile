@@ -8,7 +8,7 @@ import { colors } from '@/styles/colors';
 const button = tv({
   variants: {
     variant: {
-      default: 'w-full h-14 px-6 bg-orange-500 items-center justify-center rounded-lg disabled:opacity-95',
+      default: 'w-full h-14 px-6 items-center justify-center rounded-lg disabled:opacity-95',
       icon: ''
     },
 
@@ -16,17 +16,25 @@ const button = tv({
       full: 'w-full',
       auto: 'w-auto',
       flex: 'flex-1',
-   },
+    },
 
-   disabled: {
-    true: 'opacity-50',
-    false: 'opacity-100',
-   }
+    color: {
+      orange: 'bg-orange-500',
+      green: 'bg-green-300',
+      none: 'bg-none'
+    },
+
+
+    disabled: {
+      true: 'opacity-50',
+      false: 'opacity-100',
+    }
   },
   
   defaultVariants: {
     variant: 'default',
     size: 'full',
+    color: 'orange',
     disabled: false,
   }
 })
@@ -37,14 +45,14 @@ interface ButtonProps extends TouchableOpacityProps, VariantProps<typeof button>
   isLoading?: boolean;
 }
 
-export function Button({ title, size, icon, variant = 'default', isLoading = false, ...props }: ButtonProps) {
+export function Button({ title, size, icon, color, variant = 'default', isLoading = false, ...props }: ButtonProps) {
   return (
     <TouchableOpacity
       disabled={isLoading}
       activeOpacity={0.7}
       {...props}
     >
-      <View className={button({ variant, size, disabled: isLoading })}>
+      <View className={button({ variant, size, color, disabled: isLoading })}>
         {isLoading 
           ?
             <ActivityIndicator

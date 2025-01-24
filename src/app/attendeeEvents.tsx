@@ -1,6 +1,7 @@
 import { Alert, FlatList, StatusBar, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
+import { tv } from 'tailwind-variants'
 import dayjs from 'dayjs'
 
 import { api } from '@/server/api'
@@ -9,6 +10,19 @@ import { useAttendeeStore } from '@/store/attendee-store'
 import { Button } from '@/components/button'
 import { Header } from '@/components/header'
 import { colors } from '@/styles/colors'
+
+const color = tv({
+  variants: {
+    checkIn: {
+      true: 'text-green-300',
+      false: 'text-orange-500',
+    },
+  },
+  
+  defaultVariants: {
+    checkIn: false,
+  }
+})
 
 export default function AttendeeEvents() {
   const eventsStore = useEventsStore()
@@ -36,7 +50,6 @@ export default function AttendeeEvents() {
     }
   }
   
-
   return (
     <View className="flex-1 bg-green-500">
       <StatusBar barStyle="light-content" />
@@ -50,45 +63,58 @@ export default function AttendeeEvents() {
       <FlatList
         data={eventsStore.data}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View className="my-6 px-6">
-            <View className="flex-row items-start justify-between">
-              <View>
-                <Text className="font-bold text-2xl text-orange-500">{item.title}</Text>
-                <Text className="text-gray-200">{item.slug}</Text>
+        renderItem={({ item }) => {
+          const { checkIn, title, slug, details, startDate, endDate } = item
+
+          return (
+            <View className="my-6 px-6">
+              <View className="flex-row items-start justify-between">
+                <View >
+
+                  <View className='flex-row items-center gap-2'>
+                    <MaterialIcons 
+                      name={ checkIn ? 'check-box' : 'check-box-outline-blank'}
+                      color={checkIn ? colors.green[200] : colors.orange[500] }
+                      size={24}
+                    />
+                    <Text className={color({ checkIn: checkIn, className: 'font-bold text-2xl'})}>{title}</Text>
+                  </View>
+                  <Text className="text-gray-200">{slug}</Text>
+                </View>
+
+                <Button icon="delete" variant="icon" color="none" onPress={() => handleExitEvent(item)} />
               </View>
 
-              <Button icon="delete" variant="icon" onPress={() => handleExitEvent(item)} />
-            </View>
+              <Text className="text-zinc-100 text-lg my-4">{details}</Text>
 
-            <Text className="text-zinc-100 text-lg my-4">{item.details}</Text>
+              <View className="flex-row justify-between items-end mb-4">
+                <Button
+                  title="Ver tíquete"
+                  color={checkIn ? 'green' : 'orange' }
+                  onPress={() => router.navigate(`/ticket/${slug}`)}
+                >
+                  <MaterialIcons
+                    name="check-box-outline-blank"
+                    size={24}
+                    color={colors.green[200]}
+                  />
+                </Button>
+          
+                <View className="flex-row items-center">
+                  <Text className="text-zinc-300 italic font-black text-xl">
+                    {dayjs(startDate).format('DD/MM/YY')}
+                  </Text>
 
-            <View className="flex-row justify-between items-center mb-4">
-              <Button
-                title="Ver tíquete"
-                onPress={() => router.navigate(`/ticket/${item.slug}`)}
-              >
-                <MaterialIcons
-                  name="check-box-outline-blank"
-                  size={24}
-                  color={colors.green[200]}
-                />
-              </Button>
-        
-              <View className="flex-row items-center">
-                <Text className="text-zinc-300 italic font-black text-xl">
-                  {dayjs(item.startDate).format('DD/MM/YY')}
-                </Text>
+                  <Text className={color({ checkIn: checkIn, className: 'font-bold text-2xl' })}> {'-'} </Text>
 
-                <Text className="font-bold text-2xl text-orange-500"> {'-'} </Text>
-
-                <Text className="text-zinc-300 italic font-black text-lg">
-                  {dayjs(item.endDate).format('DD/MM/YY')}
-                </Text>
+                  <Text className="text-zinc-300 italic font-black text-lg">
+                    {dayjs(endDate).format('DD/MM/YY')}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-        )}
+          )
+        }}
 
         ListHeaderComponent={
           <Text className="text-zinc-50 text-3xl font-bold ml-6">Meus eventos: {eventsStore.data.length}</Text>
