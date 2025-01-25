@@ -93,7 +93,7 @@ export default function Ticket() {
   }
 
   return (
-    <View className="flex-1 bg-green-500">
+    <View className="flex-1 bg-green-900">
       <StatusBar barStyle="light-content" />
 
       <Header title="Minha Credencial" />
@@ -141,10 +141,12 @@ export default function Ticket() {
           {event.details}
         </Text>
 
-        <Button 
-          title="Fazer Check-in"
-          onPress={handleCheckIn}
-        />
+        { event.checkIn == false &&
+          <Button 
+            title="Fazer Check-in"
+            onPress={handleCheckIn}
+          />
+        }
 
         <TouchableOpacity 
           activeOpacity={0.7}
@@ -159,7 +161,7 @@ export default function Ticket() {
       </ScrollView>
 
       <Modal visible={expandQRCode} statusBarTranslucent>
-        <View className="flex-1 bg-green-500 items-center justify-center">
+        <View className="flex-1 bg-green-900 items-center justify-center">
           <QRCode value={checkInUrl} size={300} />
 
           <TouchableOpacity activeOpacity={0.7} onPress={() => setExpandQRCode(false)}>

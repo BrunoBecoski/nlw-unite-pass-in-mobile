@@ -1,6 +1,5 @@
 import { Alert, FlatList, StatusBar, Text, View } from 'react-native'
 import { router } from 'expo-router'
-import { MaterialIcons } from '@expo/vector-icons'
 import { tv } from 'tailwind-variants'
 import dayjs from 'dayjs'
 
@@ -9,7 +8,7 @@ import { EventStoreType, useEventsStore } from '@/store/events-store'
 import { useAttendeeStore } from '@/store/attendee-store'
 import { Button } from '@/components/button'
 import { Header } from '@/components/header'
-import { colors } from '@/styles/colors'
+import { Icon } from '@/components/icon'
 
 const color = tv({
   variants: {
@@ -51,7 +50,7 @@ export default function AttendeeEvents() {
   }
   
   return (
-    <View className="flex-1 bg-green-500">
+    <View className="flex-1 bg-green-900">
       <StatusBar barStyle="light-content" />
 
       <Header title="Meus Eventos" back />
@@ -72,9 +71,9 @@ export default function AttendeeEvents() {
                 <View >
 
                   <View className='flex-row items-center gap-2'>
-                    <MaterialIcons 
-                      name={ checkIn ? 'check-box' : 'check-box-outline-blank'}
-                      color={checkIn ? colors.green[200] : colors.orange[500] }
+                    <Icon 
+                      name={checkIn ? 'check-box' : 'check-box-outline-blank'}
+                      color={checkIn ? 'green' : 'orange' }
                       size={24}
                     />
                     <Text className={color({ checkIn: checkIn, className: 'font-bold text-2xl'})}>{title}</Text>
@@ -92,13 +91,7 @@ export default function AttendeeEvents() {
                   title="Ver tíquete"
                   color={checkIn ? 'green' : 'orange' }
                   onPress={() => router.navigate(`/ticket/${slug}`)}
-                >
-                  <MaterialIcons
-                    name="check-box-outline-blank"
-                    size={24}
-                    color={colors.green[200]}
-                  />
-                </Button>
+                />
           
                 <View className="flex-row items-center">
                   <Text className="text-zinc-300 italic font-black text-xl">

@@ -1,12 +1,10 @@
 import { Image, ImageBackground, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
 import { MotiView } from 'moti'
 
 import { AttendeeStoreProps } from '@/store/attendee-store'
 import { EventStoreType } from '@/store/events-store'
 import { QRCode } from '@/components/qrcode'
-import { colors } from '@/styles/colors'
-import { Redirect } from 'expo-router'
+import { Icon } from './icon'
 
 interface CredentialProps {
   attendee: AttendeeStoreProps
@@ -78,7 +76,7 @@ export function Credential({ attendee, event, avatar, checkInUrl, onChangeAvatar
           :
             <TouchableOpacity onPress={onChangeAvatar} activeOpacity={0.9}>
               <View className="w-36 h-36 rounded-full -mt-24 bg-gray-400 items-center justify-center">
-                <MaterialIcons name="camera-alt" color={colors.green[400]} size={32} />
+                <Icon name="camera-alt" color="black" size={32} />
               </View>
             </TouchableOpacity>
         }

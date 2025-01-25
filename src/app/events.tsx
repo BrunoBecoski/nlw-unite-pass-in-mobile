@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Alert, FlatList, Text, View } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import axios from 'axios'
 
@@ -11,7 +10,7 @@ import { Header } from '@/components/header'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { EventEvents } from '@/components/eventEvents'
-import { colors } from '@/styles/colors'
+import { Icon } from '@/components/icon'
 
 export type EventEventsType = {
   id: string,
@@ -112,18 +111,18 @@ export default function Events() {
   }
 
   return (
-    <View className="flex-1 bg-green-500">
+    <View className="flex-1 bg-green-900">
       <Header title="Eventos" back />
 
       <View className="flex flex-row p-6 gap-4">
         <Input
           size='flex'
-          >
-          <MaterialIcons
+        >
+          <Icon
             name="search"
             size={20}
-            color={colors.green[200]}
-            />
+            color="green"
+          />
 
           <Input.Field 
             placeholder="Pesquise por um evento"

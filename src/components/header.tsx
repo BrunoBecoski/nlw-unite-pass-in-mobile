@@ -1,8 +1,7 @@
 import { Text, TouchableOpacity, View } from 'react-native'
 import { router } from 'expo-router'
-import { MaterialIcons } from '@expo/vector-icons'
 
-import { colors } from '@/styles/colors'
+import { Icon } from './icon'
 
 interface HeaderProps {
   title: string
@@ -18,11 +17,11 @@ export function Header({ title, back = false, handleExit }: HeaderProps) {
 
       { back &&
         <TouchableOpacity onPress={() => router.back()}>
-          <MaterialIcons
+          <Icon
             className="h-12"
             name="arrow-back-ios"
             size={24}
-            color={colors.orange[500]}
+            color="orange"
           />
         </TouchableOpacity>
       }
@@ -35,11 +34,11 @@ export function Header({ title, back = false, handleExit }: HeaderProps) {
 
       { handleExit &&
         <TouchableOpacity onPress={handleExit}>
-          <MaterialIcons
+          <Icon
             className="h-12"
             name="logout"
             size={24}
-            color={colors.orange[500]}
+            color="orange"
           />
         </TouchableOpacity>
       }

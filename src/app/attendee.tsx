@@ -1,15 +1,13 @@
 import { Redirect, router } from 'expo-router'
 import { Alert, Image, StatusBar, Text, TouchableOpacity, View } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 
-import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
 import { useEventsStore } from '@/store/events-store'
 import { useAvatarStore } from '@/store/avatar-store'
 import { Header } from '@/components/header'
 import { Button } from '@/components/button'
-import { colors } from '@/styles/colors'
+import { Icon } from '@/components/icon'
 
 export default function Attendee() {
   const attendeeStore = useAttendeeStore()
@@ -67,7 +65,7 @@ export default function Attendee() {
   }
 
   return (
-    <View className="flex-1 bg-green-500">
+    <View className="flex-1 bg-green-900">
       <StatusBar barStyle="light-content" />
 
       <Header title="Minha conta" handleExit={handleExit} />
@@ -88,12 +86,8 @@ export default function Attendee() {
             </TouchableOpacity>
           :
             <TouchableOpacity activeOpacity={0.9} onPress={handleSelectAvatar}>
-              <View className="w-36 h-36 rounded-full bg-gray-400 items-center justify-center">
-                <MaterialIcons
-                  name="camera-alt"
-                  color={colors.green[400]}
-                  size={32}
-                />
+              <View className="w-36 h-36 rounded-full bg-gray-200 items-center justify-center">
+                <Icon name="camera-alt" color="black" size={32} />
               </View>
             </TouchableOpacity>
         }

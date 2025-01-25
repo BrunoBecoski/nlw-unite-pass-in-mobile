@@ -2,13 +2,12 @@ import { useState } from 'react'
 import { Alert, Image, StatusBar, View } from 'react-native'
 import axios from 'axios'
 import { Link, router } from 'expo-router'
-import { MaterialIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
-import { colors } from '@/styles/colors'
+import { Icon } from '@/components/icon'
 
 const EVENT_ID = 'cb9108f2-8d99-4d30-bfa1-bb6e3bb41da0'
 
@@ -55,7 +54,7 @@ export default function Register() {
   }
 
   return (
-    <View className="bg-green-500 flex-1 items-center justify-center p-8">
+    <View className="bg-green-900 flex-1 items-center justify-center p-8">
       <StatusBar barStyle="light-content" />
 
       <Image 
@@ -66,10 +65,10 @@ export default function Register() {
 
       <View className="w-full mt-12 gap-3">
         <Input>
-          <MaterialIcons
+          <Icon
             name="account-circle"
             size={20}
-            color={colors.green[200]}
+            color="green"
           />
 
           <Input.Field 
@@ -79,10 +78,10 @@ export default function Register() {
         </Input>
  
         <Input>
-          <MaterialIcons
+          <Icon
             name="alternate-email"
             size={20}
-            color={colors.green[200]}
+            color="green"
           />
           
           <Input.Field

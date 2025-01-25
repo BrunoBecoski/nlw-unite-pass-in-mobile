@@ -1,9 +1,8 @@
 import { ActivityIndicator, Text, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 import { tv, type VariantProps } from 'tailwind-variants'
-import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 
-import { MaterialIconsTypes } from '../../@types/MaterialIcons';
-import { colors } from '@/styles/colors';
+import { MaterialIconsTypes } from '../@types/MaterialIcons'
+import { Icon } from './icon'
 
 const button = tv({
   variants: {
@@ -56,16 +55,17 @@ export function Button({ title, size, icon, color, variant = 'default', isLoadin
         {isLoading 
           ?
             <ActivityIndicator
-              className="text-green-500"
+              className="text-green-900"
             />
           :
             variant === 'default' 
               ?
-                <Text className="text-green-500 text-base font-bold uppercase">
+                <Text className="text-green-900 text-base font-bold uppercase">
                   {title}
                 </Text>
               : 
-                <MaterialIcons name={icon} size={32} color={colors.red[500]} />
+                icon &&
+                <Icon name={icon} size={32} color="red" />
           }
         </View>
       </TouchableOpacity>

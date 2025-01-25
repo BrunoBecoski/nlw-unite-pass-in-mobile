@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { Alert, Image, StatusBar, View } from 'react-native'
 import { Link, Redirect, router } from 'expo-router'
-import { MaterialIcons } from '@expo/vector-icons'
 
 import { api } from '@/server/api'
 import { useAttendeeStore } from '@/store/attendee-store'
 import { useEventsStore } from '@/store/events-store'
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
-import { colors } from '@/styles/colors'
+import { Icon } from '@/components/icon'
 
 export default function Home() {
   const [code, setCode] = useState('')
@@ -44,7 +43,7 @@ export default function Home() {
   }
 
   return (
-    <View className="bg-green-500 flex-1 items-center justify-center p-8">
+    <View className="bg-green-900 flex-1 items-center justify-center p-8">
       <StatusBar barStyle="light-content" />
 
       <Image 
@@ -55,10 +54,10 @@ export default function Home() {
 
       <View className="w-full mt-12 gap-3">
         <Input>
-          <MaterialIcons
+          <Icon
             name="confirmation-num"
             size={20}
-            color={colors.green[200]}
+            color="green"
           />
           <Input.Field 
             placeholder="Seu código de participante"

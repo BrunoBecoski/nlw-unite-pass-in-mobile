@@ -5,7 +5,7 @@ import { tv, type VariantProps } from 'tailwind-variants'
 import { colors } from '@/styles/colors'
 
 const input = tv({
-  base: 'w-full h-14 flex-row items-center gap-3 p-3 border border-green-400 rounded-lg',
+  base: 'w-full h-14 flex-row items-center gap-3 p-3 border border-green-500 rounded-lg',
 
   variants: { 
     size: {
