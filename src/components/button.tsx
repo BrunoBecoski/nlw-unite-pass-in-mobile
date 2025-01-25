@@ -7,8 +7,8 @@ import { Icon } from './icon'
 const button = tv({
   variants: {
     variant: {
-      default: 'w-full h-14 px-6 items-center justify-center rounded-lg disabled:opacity-95',
-      icon: ''
+      default: 'w-full h-14 px-6 flex-row gap-4 items-center justify-center rounded-lg disabled:opacity-95',
+      icon: 'h-12',
     },
 
     size: {
@@ -22,7 +22,6 @@ const button = tv({
       green: 'bg-green-300',
       none: 'bg-none'
     },
-
 
     disabled: {
       true: 'opacity-50',
@@ -44,7 +43,7 @@ interface ButtonProps extends TouchableOpacityProps, VariantProps<typeof button>
   isLoading?: boolean;
 }
 
-export function Button({ title, size, icon, color, variant = 'default', isLoading = false, ...props }: ButtonProps) {
+function Button({ variant, title, size, color, children, isLoading = false, ...props }: ButtonProps) {
   return (
     <TouchableOpacity
       disabled={isLoading}
@@ -58,16 +57,42 @@ export function Button({ title, size, icon, color, variant = 'default', isLoadin
               className="text-green-900"
             />
           :
-            variant === 'default' 
-              ?
-                <Text className="text-green-900 text-base font-bold uppercase">
-                  {title}
-                </Text>
-              : 
-                icon &&
-                <Icon name={icon} size={32} color="red" />
+            children
           }
         </View>
       </TouchableOpacity>
   )
 }
+
+interface ButtonTitleProps {
+  title: string
+}
+
+function ButtonTitle({ title }: ButtonTitleProps) {
+  return (
+    <Text className="text-green-900 text-base font-bold uppercase">
+      {title}
+    </Text>
+  )
+}
+
+interface ButtonIconProps {
+  icon: MaterialIconsTypes
+  color?: 'orange' | 'green' | 'red' | 'black' 
+  size?: 20 | 24 | 32
+}
+
+function ButtonIcon({ icon, color = 'black', size = 20 }: ButtonIconProps) {
+  return (
+    <Icon
+      color={color}
+      name={icon}
+      size={size}
+    />
+  )
+}
+
+Button.Title = ButtonTitle
+Button.Icon = ButtonIcon
+
+export { Button }

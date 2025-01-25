@@ -96,7 +96,7 @@ export default function Ticket() {
     <View className="flex-1 bg-green-900">
       <StatusBar barStyle="light-content" />
 
-      <Header title="Minha Credencial" />
+      <Header title="Minha Credencial" back={true} />
 
       <ScrollView 
         className="-mt-28 -z-10"
@@ -142,10 +142,10 @@ export default function Ticket() {
         </Text>
 
         { event.checkIn == false &&
-          <Button 
-            title="Fazer Check-in"
-            onPress={handleCheckIn}
-          />
+          <Button onPress={handleCheckIn}>
+            <Button.Title title="Fazer Check-in" />
+            <Button.Icon icon="check" />
+          </Button>            
         }
 
         <TouchableOpacity 

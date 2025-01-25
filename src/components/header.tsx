@@ -2,6 +2,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import { router } from 'expo-router'
 
 import { Icon } from './icon'
+import { Button } from './button'
 
 interface HeaderProps {
   title: string
@@ -16,14 +17,9 @@ export function Header({ title, back = false, handleExit }: HeaderProps) {
       { handleExit && <View className="w-7" /> }
 
       { back &&
-        <TouchableOpacity onPress={() => router.back()}>
-          <Icon
-            className="h-12"
-            name="arrow-back-ios"
-            size={24}
-            color="orange"
-          />
-        </TouchableOpacity>
+        <Button onPress={router.back} variant="icon" color="none" className="h-12">
+          <Button.Icon icon="arrow-back-ios" color="orange" size={24} />
+        </Button>
       }
 
       <Text className="flex-1 text-white font-medium text-lg text-center">
@@ -33,14 +29,9 @@ export function Header({ title, back = false, handleExit }: HeaderProps) {
       { back && <View className="w-7" /> }
 
       { handleExit &&
-        <TouchableOpacity onPress={handleExit}>
-          <Icon
-            className="h-12"
-            name="logout"
-            size={24}
-            color="orange"
-          />
-        </TouchableOpacity>
+        <Button onPress={handleExit} variant="icon" color="none" className="h-12">
+          <Button.Icon icon='logout' color="orange" size={24} />
+        </Button>
       }
     </View>
   )

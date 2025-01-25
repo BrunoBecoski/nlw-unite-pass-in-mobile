@@ -91,11 +91,10 @@ export default function Register() {
           />
         </Input>
 
-        <Button 
-          onPress={handleRegister}
-          title="Criar conta"
-          isLoading={isLoading}
-        />
+        <Button onPress={handleRegister} isLoading={isLoading}>
+          <Button.Icon icon="person-add" />
+          <Button.Title title="Criar conta" />
+        </Button>
 
         <Link href="/" className="text-gray-100 text-base font-bold text-center mt-8">
           Já tem conta?

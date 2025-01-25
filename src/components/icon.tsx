@@ -6,7 +6,7 @@ import { colors } from '@/styles/colors';
 interface IconProps {
   name: MaterialIconsTypes
   color: 'orange' | 'green' | 'red' | 'black'
-  size: 20 | 24 | 32
+  size?: 20 | 24 | 32
   className?: string
 }
 

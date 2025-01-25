@@ -67,11 +67,10 @@ export default function Home() {
           />
         </Input>
 
-        <Button 
-          onPress={handleAccessCredential} 
-          title="Acessar conta"
-          isLoading={isLoading}
-        />
+        <Button onPress={handleAccessCredential} isLoading={isLoading}>
+          <Button.Icon icon="login" />
+          <Button.Title title="Acessar conta" />
+        </Button>
 
         <Link href="/register" className="text-gray-100 text-base font-bold text-center mt-8">
           Ainda não possui conta?

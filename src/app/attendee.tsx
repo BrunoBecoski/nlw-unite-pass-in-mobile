@@ -101,7 +101,10 @@ export default function Attendee() {
         </Text>
       </View>
 
-      <Button title="Ver meus eventos" onPress={() => router.push('/attendeeEvents')} />
+      <Button onPress={() => router.push('/attendeeEvents')}>
+        <Button.Title title="Ver meus eventos" />
+        <Button.Icon icon="list" />
+      </Button>
     </View>
   )
 }

@@ -119,7 +119,7 @@ export default function Events() {
           size='flex'
         >
           <Icon
-            name="search"
+            name="manage-search"
             size={20}
             color="green"
           />
@@ -130,12 +130,9 @@ export default function Events() {
             />
         </Input>
 
-        <Button 
-          title="Pesquisa"
-          size="auto"
-          onPress={fetchEventsQuery}
-          isLoading={isLoading}
-          />
+        <Button onPress={fetchEventsQuery} isLoading={isLoading} size="auto">
+          <Button.Icon icon="search" />
+        </Button>
       </View>
 
       <Text className="text-zinc-300 ml-6 text-lg">{total} evento(s)</Text>
@@ -147,10 +144,10 @@ export default function Events() {
           <EventEvents event={item} handleJoin={handleJoin} />
         )}
         ListFooterComponent={
-          <Button 
-            title="Mostrar mais eventos"
-            onPress={fetchEventsIndex}
-          />
+          <Button onPress={fetchEventsIndex}>
+            <Button.Title title="Mostrar mais eventos" />
+            <Button.Icon icon="list" />
+          </Button>
         }
         ListFooterComponentClassName={ Math.ceil(total / 10) > index ? 'm-10' : 'hidden' }
       />

@@ -56,7 +56,10 @@ export default function AttendeeEvents() {
       <Header title="Meus Eventos" back />
 
       <View className="items-center mb-6">
-        <Button title="Buscar novos eventos"  onPress={() => router.navigate('/events')} />
+        <Button onPress={() => router.navigate('/events')}>
+          <Button.Title title="Buscar novos eventos" />
+          <Button.Icon icon="manage-search" />
+        </Button>
       </View>
 
       <FlatList
@@ -81,17 +84,22 @@ export default function AttendeeEvents() {
                   <Text className="text-gray-200">{slug}</Text>
                 </View>
 
-                <Button icon="delete" variant="icon" color="none" onPress={() => handleExitEvent(item)} />
+                <Button variant="icon" color="none" onPress={() => handleExitEvent(item)}>
+                  <Button.Icon icon="delete" color="red" size={24} />
+                  </Button>
               </View>
 
               <Text className="text-zinc-100 text-lg my-4">{details}</Text>
 
               <View className="flex-row justify-between items-end mb-4">
                 <Button
-                  title="Ver tíquete"
+                  size="auto"
                   color={checkIn ? 'green' : 'orange' }
                   onPress={() => router.navigate(`/ticket/${slug}`)}
-                />
+                >
+                  <Button.Title title="Ver tíquete" />
+                  <Button.Icon icon="confirmation-num" />
+                </Button>
           
                 <View className="flex-row items-center">
                   <Text className="text-zinc-300 italic font-black text-xl">

@@ -38,7 +38,10 @@ export function EventEvents({ event, handleJoin }: EventEventsProps) {
       </View>
     </View>
 
-    <Button title="Participar do evento"  size="full" onPress={() => handleJoin(event)} />
+    <Button size="full" onPress={() => handleJoin(event)}>
+      <Button.Title title="Participar do evento"/>
+      <Button.Icon icon="add" />
+    </Button>
   </View>
   )
 }
