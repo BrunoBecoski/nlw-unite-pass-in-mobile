@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Alert, FlatList, StatusBar, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { tv } from 'tailwind-variants'
@@ -9,6 +10,7 @@ import { useAttendeeStore } from '@/store/attendee-store'
 import { Button } from '@/components/button'
 import { Header } from '@/components/header'
 import { Icon } from '@/components/icon'
+import { Switch } from '@/components/switch'
 
 const color = tv({
   variants: {
@@ -26,6 +28,14 @@ const color = tv({
 export default function AttendeeEvents() {
   const eventsStore = useEventsStore()
   const attendeeStore = useAttendeeStore()
+
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [filterCheckInOn, setFilterCheckInOn]  = useState(true)
+  const [filterCheckInOff, setFilterCheckInOff]  = useState(true)
+
+  const [events, setEvents] = useState<EventStoreType[]>(eventsStore.data)
+  const [filteredEvents, setFilteredEvents] = useState<EventStoreType[]>(events)
+
   
   function handleExitEvent(event: EventStoreType) {
     Alert.alert('Sair do evento', `Deseja sair do evento ${event.title}`, [
@@ -49,8 +59,41 @@ export default function AttendeeEvents() {
     }
   }
   
+  function filterEvents() {
+    if (filterCheckInOn == true && filterCheckInOff == true) {
+      setFilteredEvents(events)
+
+      return
+    }
+
+    if (filterCheckInOn == true && filterCheckInOff == false) {
+      setFilteredEvents(events.filter(event => event.checkIn == true))
+
+      return
+    }
+
+
+    if (filterCheckInOn == false && filterCheckInOff == true) {
+      setFilteredEvents(events.filter(event => event.checkIn == false))
+
+      return
+    }
+
+
+    if (filterCheckInOn == false && filterCheckInOff == false) {
+      setFilteredEvents([])
+
+      return
+    }
+
+  }
+
+  useEffect(() => {
+    filterEvents()
+  }, [filterCheckInOn, filterCheckInOff])
+
   return (
-    <View className="flex-1 bg-green-900">
+    <View className="flex-1 bg-green-900 borde">
       <StatusBar barStyle="light-content" />
 
       <Header title="Meus Eventos" back />
@@ -62,8 +105,20 @@ export default function AttendeeEvents() {
         </Button>
       </View>
 
+      <Button onPress={() => setIsFilterOpen(!isFilterOpen)} size="auto">
+        <Button.Title title="Filtros" />
+        <Button.Icon icon="filter-list" />
+      </Button>
+
+      { isFilterOpen &&
+        <View className="flex-row justify-between px-6">
+          <Switch label="Já fez o Check-in" onValueChange={setFilterCheckInOn} value={filterCheckInOn} />
+          <Switch label="Não fez Check-in" onValueChange={setFilterCheckInOff} value={filterCheckInOff} />
+        </View>
+      }
+
       <FlatList
-        data={eventsStore.data}
+        data={isFilterOpen ? filteredEvents : events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           const { checkIn, title, slug, details, startDate, endDate } = item
@@ -118,7 +173,7 @@ export default function AttendeeEvents() {
         }}
 
         ListHeaderComponent={
-          <Text className="text-zinc-50 text-3xl font-bold ml-6">Meus eventos: {eventsStore.data.length}</Text>
+          <Text className="text-zinc-50 text-3xl font-bold ml-6">{eventsStore.data.length} Evento(s)</Text>
         }
       />
     </View>
