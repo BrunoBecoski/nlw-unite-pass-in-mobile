@@ -11,6 +11,7 @@ import { Button } from '@/components/button'
 import { Header } from '@/components/header'
 import { Icon } from '@/components/icon'
 import { Input } from '@/components/input'
+import { RadioGroup } from '@/components/radioGroup'
 
 const color = tv({
   variants: {
@@ -28,12 +29,9 @@ const color = tv({
 export default function AttendeeEvents() {
   const eventsStore = useEventsStore()
   const attendeeStore = useAttendeeStore()
-
+  
   const [search, setSearch] = useState('')
-
-  const [filterCheckInOn, setFilterCheckInOn]  = useState(true)
-  const [filterCheckInOff, setFilterCheckInOff]  = useState(true)
-
+  const [filter, setFilter] = useState('')
   const [events, setEvents] = useState<EventStoreType[]>(eventsStore.data)
   const [filteredEvents, setFilteredEvents] = useState<EventStoreType[]>(events)
 
@@ -61,26 +59,32 @@ export default function AttendeeEvents() {
   }
   
   function filterEvents() {
-    if (filterCheckInOn == true && filterCheckInOff == true) {
-      setFilteredEvents(events)
+    if (filter === '') {
+      setFilteredEvents(eventsStore.data)
 
       return
     }
 
-    if (filterCheckInOn == true && filterCheckInOff == false) {
-      setFilteredEvents(events.filter(event => event.checkIn == true))
+    if (filter === 'Com Check-in') {
+      setFilteredEvents(events.sort(event => event.checkIn === true ? 1 : -1))
 
       return
     }
 
-    if (filterCheckInOn == false && filterCheckInOff == true) {
-      setFilteredEvents(events.filter(event => event.checkIn == false))
+    if (filter === 'Sem Check-in') {
+      setFilteredEvents(events.sort(event => event.checkIn === false ? 1 : -1))
 
       return
     }
 
-    if (filterCheckInOn == false && filterCheckInOff == false) {
-      setFilteredEvents([])
+    if (filter === 'Mais novo') {
+      setFilteredEvents(events.sort((event_1, event_2) => new Date(event_1.startDate).valueOf() - new Date(event_2.startDate).valueOf() ))
+
+      return  
+    }
+
+    if (filter === 'Mais antigo') {
+      setFilteredEvents(events.sort((event_1, event_2) => new Date(event_2.startDate).valueOf() - new Date(event_1.startDate).valueOf()))
 
       return
     }
@@ -96,10 +100,10 @@ export default function AttendeeEvents() {
 
   useEffect(() => {
     filterEvents()
-  }, [filterCheckInOn, filterCheckInOff])
+  }, [filter])
 
   return (
-    <View className="flex-1 bg-green-900 borde">
+    <View className="flex-1 bg-green-900">
       <StatusBar barStyle="light-content" />
 
       <Header title="Meus Eventos" back />
@@ -126,29 +130,11 @@ export default function AttendeeEvents() {
         </Button>
       </View>
 
-      <ScrollView
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        className="h-14" 
-        contentContainerClassName="flex flex-row items-center justify-center gap-6"
-      > 
-        <TouchableOpacity>
-          <Text className="ml-6 p-2 border border-white rounded-md text-white font-medium text-base text-center">
-            Mais novo
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Text className="p-2 border border-white rounded-md text-white font-medium text-base text-center">Mais antigo</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Text className="p-2 border border-white rounded-md text-white font-medium text-base text-center">Com check-in</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Text className="mr-6 p-2 border border-white rounded-md text-white font-medium text-base text-center">Sem check-in</Text>
-        </TouchableOpacity>
-      </ScrollView> 
+      <RadioGroup
+        values={['Com Check-in', 'Sem Check-in', 'Mais novo', 'Mais antigo']}
+        currentValue={filter}
+        setCurrentValue={setFilter}
+      />
 
       <FlatList
         data={filteredEvents}
