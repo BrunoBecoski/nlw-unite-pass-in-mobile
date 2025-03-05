@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Alert, FlatList, StatusBar, Text, View } from 'react-native'
+import { Alert, FlatList, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import { router } from 'expo-router'
 import { tv } from 'tailwind-variants'
 import dayjs from 'dayjs'
@@ -10,7 +10,7 @@ import { useAttendeeStore } from '@/store/attendee-store'
 import { Button } from '@/components/button'
 import { Header } from '@/components/header'
 import { Icon } from '@/components/icon'
-import { Switch } from '@/components/switch'
+import { Input } from '@/components/input'
 
 const color = tv({
   variants: {
@@ -29,7 +29,8 @@ export default function AttendeeEvents() {
   const eventsStore = useEventsStore()
   const attendeeStore = useAttendeeStore()
 
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [search, setSearch] = useState('')
+
   const [filterCheckInOn, setFilterCheckInOn]  = useState(true)
   const [filterCheckInOff, setFilterCheckInOff]  = useState(true)
 
@@ -72,20 +73,25 @@ export default function AttendeeEvents() {
       return
     }
 
-
     if (filterCheckInOn == false && filterCheckInOff == true) {
       setFilteredEvents(events.filter(event => event.checkIn == false))
 
       return
     }
 
-
     if (filterCheckInOn == false && filterCheckInOff == false) {
       setFilteredEvents([])
 
       return
     }
+  }
 
+  function handleSearch() {
+    const newFilteredEvents = events.filter(event => 
+      event.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+    )
+
+    setFilteredEvents(newFilteredEvents)
   }
 
   useEffect(() => {
@@ -98,27 +104,54 @@ export default function AttendeeEvents() {
 
       <Header title="Meus Eventos" back />
 
-      <View className="items-center mb-6">
-        <Button onPress={() => router.navigate('/events')}>
-          <Button.Title title="Buscar novos eventos" />
-          <Button.Icon icon="manage-search" />
+
+      <View className="flex flex-row p-6 gap-4">
+        <Input
+          size='flex'
+        >
+          <Icon
+            name="manage-search"
+            size={20}
+            color="green"
+          />
+
+          <Input.Field 
+            placeholder="Pesquise por um evento"
+            onChangeText={setSearch}
+            />
+        </Input>
+
+        <Button onPress={handleSearch} size="auto">
+          <Button.Icon icon="search" />
         </Button>
       </View>
 
-      <Button onPress={() => setIsFilterOpen(!isFilterOpen)} size="auto">
-        <Button.Title title="Filtros" />
-        <Button.Icon icon="filter-list" />
-      </Button>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        className="h-14" 
+        contentContainerClassName="flex flex-row items-center justify-center gap-6"
+      > 
+        <TouchableOpacity>
+          <Text className="ml-6 p-2 border border-white rounded-md text-white font-medium text-base text-center">
+            Mais novo
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text className="p-2 border border-white rounded-md text-white font-medium text-base text-center">Mais antigo</Text>
+        </TouchableOpacity>
 
-      { isFilterOpen &&
-        <View className="flex-row justify-between px-6">
-          <Switch label="Já fez o Check-in" onValueChange={setFilterCheckInOn} value={filterCheckInOn} />
-          <Switch label="Não fez Check-in" onValueChange={setFilterCheckInOff} value={filterCheckInOff} />
-        </View>
-      }
+        <TouchableOpacity>
+          <Text className="p-2 border border-white rounded-md text-white font-medium text-base text-center">Com check-in</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Text className="mr-6 p-2 border border-white rounded-md text-white font-medium text-base text-center">Sem check-in</Text>
+        </TouchableOpacity>
+      </ScrollView> 
 
       <FlatList
-        data={isFilterOpen ? filteredEvents : events}
+        data={filteredEvents}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           const { checkIn, title, slug, details, startDate, endDate } = item
@@ -127,7 +160,6 @@ export default function AttendeeEvents() {
             <View className="my-6 px-6">
               <View className="flex-row items-start justify-between">
                 <View >
-
                   <View className='flex-row items-center gap-2'>
                     <Icon 
                       name={checkIn ? 'check-box' : 'check-box-outline-blank'}
@@ -141,7 +173,7 @@ export default function AttendeeEvents() {
 
                 <Button variant="icon" color="none" onPress={() => handleExitEvent(item)}>
                   <Button.Icon icon="delete" color="red" size={24} />
-                  </Button>
+                </Button>
               </View>
 
               <Text className="text-zinc-100 text-lg my-4">{details}</Text>
@@ -171,10 +203,6 @@ export default function AttendeeEvents() {
             </View>
           )
         }}
-
-        ListHeaderComponent={
-          <Text className="text-zinc-50 text-3xl font-bold ml-6">{eventsStore.data.length} Evento(s)</Text>
-        }
       />
     </View>
   )

@@ -105,6 +105,13 @@ export default function Attendee() {
         <Button.Title title="Ver meus eventos" />
         <Button.Icon icon="list" />
       </Button>
+
+      <View className="items-center mb-6">
+        <Button onPress={() => router.navigate('/events')}>
+          <Button.Title title="Buscar novos eventos" />
+          <Button.Icon icon="manage-search" />
+        </Button>
+      </View>
     </View>
   )
 }
