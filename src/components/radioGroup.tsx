@@ -2,14 +2,14 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native"
 
 interface RadioGroupProps {
   values: string[],
-  currentValue: string,
-  setCurrentValue: (value: string) => void
+  currentValue: string | undefined,
+  setCurrentValue: (value: string | undefined) => void
 }
 
 export function RadioGroup({ values, currentValue, setCurrentValue }: RadioGroupProps) {
   function handlePress(value: string) {
     if (value === currentValue) {
-      setCurrentValue('')
+      setCurrentValue(undefined)
     } else {
       setCurrentValue(value)
     }

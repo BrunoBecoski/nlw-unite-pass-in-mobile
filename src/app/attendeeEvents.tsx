@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Alert, FlatList, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, StatusBar, Text, View } from 'react-native'
 import { router } from 'expo-router'
 import { tv } from 'tailwind-variants'
 import dayjs from 'dayjs'
@@ -31,7 +31,7 @@ export default function AttendeeEvents() {
   const attendeeStore = useAttendeeStore()
   
   const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState<string | undefined>(undefined)
   const [events, setEvents] = useState<EventStoreType[]>(eventsStore.data)
   const [filteredEvents, setFilteredEvents] = useState<EventStoreType[]>(events)
 
@@ -59,32 +59,37 @@ export default function AttendeeEvents() {
   }
   
   function filterEvents() {
-    if (filter === '') {
-      setFilteredEvents(eventsStore.data)
+
+    const searchEvents = events.filter(event => 
+      event.title.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+    )
+
+    if (filter === undefined) {
+      setFilteredEvents(searchEvents)
 
       return
     }
 
     if (filter === 'Com Check-in') {
-      setFilteredEvents(events.sort(event => event.checkIn === true ? 1 : -1))
+      setFilteredEvents(searchEvents.sort(event => event.checkIn === true ? -1 : 1))
 
       return
     }
 
     if (filter === 'Sem Check-in') {
-      setFilteredEvents(events.sort(event => event.checkIn === false ? 1 : -1))
+      setFilteredEvents(searchEvents.sort(event => event.checkIn === false ? -1 : 1))
 
       return
     }
 
     if (filter === 'Mais novo') {
-      setFilteredEvents(events.sort((event_1, event_2) => new Date(event_1.startDate).valueOf() - new Date(event_2.startDate).valueOf() ))
+      setFilteredEvents(searchEvents.sort((event_1, event_2) => new Date(event_2.startDate).valueOf() - new Date(event_1.startDate).valueOf()))
 
       return  
     }
 
     if (filter === 'Mais antigo') {
-      setFilteredEvents(events.sort((event_1, event_2) => new Date(event_2.startDate).valueOf() - new Date(event_1.startDate).valueOf()))
+      setFilteredEvents(searchEvents.sort((event_1, event_2) => new Date(event_1.startDate).valueOf() - new Date(event_2.startDate).valueOf()))
 
       return
     }
@@ -107,7 +112,6 @@ export default function AttendeeEvents() {
       <StatusBar barStyle="light-content" />
 
       <Header title="Meus Eventos" back />
-
 
       <View className="flex flex-row p-6 gap-4">
         <Input
@@ -136,7 +140,10 @@ export default function AttendeeEvents() {
         setCurrentValue={setFilter}
       />
 
+      <Text className="text-zinc-300 ml-6 mt-2 text-lg">{filteredEvents.length} evento(s)</Text>
+
       <FlatList
+        className="h-full"
         data={filteredEvents}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {

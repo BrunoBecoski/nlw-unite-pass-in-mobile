@@ -11,6 +11,7 @@ import { Input } from '@/components/input'
 import { Button } from '@/components/button'
 import { EventEvents } from '@/components/eventEvents'
 import { Icon } from '@/components/icon'
+import { RadioGroup } from '@/components/radioGroup'
 
 export type EventEventsType = {
   id: string,
@@ -25,7 +26,10 @@ export type EventEventsType = {
 
 export default function Events() {
   const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState<string | undefined>(undefined)
   const [events, setEvents] = useState<EventEventsType[]>([])
+  const [filteredEvents, setFilteredEvents] = useState<EventEventsType[]>(events)
+  
   const [isLoading, setIsLoading] = useState(false)
   const [total, setTotal] = useState(0)
   const [index, setIndex] = useState(1)
@@ -46,10 +50,6 @@ export default function Events() {
     ])
   }
 
-  useEffect(() => {
-    fetchEvents() 
-  }, [])
-
   async function fetchEvents() {
     setIsLoading(true)
 
@@ -57,7 +57,6 @@ export default function Events() {
 
     setEvents(data.events)
     setTotal(data.total)
-
     setIsLoading(false)
   }
 
@@ -69,22 +68,19 @@ export default function Events() {
     setIndex(1)
     setEvents(data.events)
     setTotal(data.total)
-
     setIsLoading(false)
+    setFilter(undefined)
   }
 
   async function fetchEventsIndex() {
     setIsLoading(true)
     
     const newIndex = index + 1
-    
     const { data } = await api.get(`/get/events?pageIndex=${newIndex}`)
-    
     const newEvents = [...events, ...data.events]
     
     setIndex(newIndex)
     setEvents(newEvents)
-
     setIsLoading(false)
   }
 
@@ -109,6 +105,28 @@ export default function Events() {
       }
     }
   }
+
+  function filterEvents() {
+    if (filter === undefined) {
+      setFilteredEvents(events)
+    }
+
+    if (filter === 'Disponíveis') {
+      setFilteredEvents(events.filter(event => new Date (event.startDate).valueOf() > new Date().valueOf()))
+    }
+
+    if (filter === 'Indisponíveis') {
+      setFilteredEvents(events.filter(event => new Date (event.startDate).valueOf() < new Date().valueOf()))
+    }
+  }
+
+  useEffect(() => {
+    filterEvents()
+  }, [filter, events])
+
+  useEffect(() => {
+    fetchEvents() 
+  }, [])
 
   return (
     <View className="flex-1 bg-green-900">
@@ -135,10 +153,17 @@ export default function Events() {
         </Button>
       </View>
 
-      <Text className="text-zinc-300 ml-6 text-lg">{total} evento(s)</Text>
+      <RadioGroup
+        values={['Disponíveis', 'Indisponíveis']}
+        currentValue={filter}
+        setCurrentValue={setFilter}
+      />
+
+      <Text className="text-zinc-300 ml-6 text-lg mt-2">{filteredEvents.length} evento(s)</Text>
 
       <FlatList
-        data={events}
+        data={filteredEvents}
+        className="h-full"
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <EventEvents event={item} handleJoin={handleJoin} />
