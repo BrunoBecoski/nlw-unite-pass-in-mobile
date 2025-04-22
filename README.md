@@ -17,7 +17,8 @@
 </div>
 
 ## Pass.in Mobile
-Aplicativo para telefone para o participante criar sua conta e fazer check-in nos eventos com as funcionalidades:
+
+Aplicativo para telefone para o participante criar sua conta e participar de eventos com as funcionalidades:
 - Criar
 - Pesquisar
 - Participantar
